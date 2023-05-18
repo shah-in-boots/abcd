@@ -29,3 +29,13 @@ Exports the ECG rhythm stored in the XML file to a file named 'MUSE_FILE.csv', a
 a. The Python script 'musexmlex.py' is in the current-working directory.
 b. The file 'MUSE_FILE.xml' is in the current-working directory.
 c. Python is installed on the machine, and it is in the system path.
+
+## AWS access
+
+AWS ID = CARDIO_DARBAR
+
+```
+Sys.setenv(
+	AWS_REGION = "us-east-2"
+)
+```
