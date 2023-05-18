@@ -1,0 +1,14 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+convert_ecg_to_cvs|function|2e62f65d67e102ac|||||||||||||||
+data_loc|stem|6269ad4ec6e3b12b|4a29cfeee9bb9eb1|9f431d2e8900d535|1827491257||t19492.9031301621s|c1aa9ca10fc19154|116|rds|local|vector|||1.622||
+ecg_files|stem|13654152accce27f|f028a8388cca568a|091dccadfecd9440|-880297501||t19492.9045863401s|bf1a1ce7cd804ab5|251|rds|local|vector|||0.002||
+ecg_xml_files|pattern|2a3e4315ed5a79d8|1751b100d8ffa7b2||-1968490200||||818820|file|local|vector||ecg_xml_files_3baad24d*ecg_xml_files_7444ae60*ecg_xml_files_2c0488d2*ecg_xml_files_0ca7b70d*ecg_xml_files_8c5ac328*ecg_xml_files_bcf3310c|0||
+ecg_xml_files_0ca7b70d|branch|59f86778657705ef|1751b100d8ffa7b2|ad6fb326c484b385|151536276|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104203_56000.xml|t19492.7178472222s|188d593b106cfc5c|146400|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_2c0488d2|branch|8ce2adb70e5e2718|1751b100d8ffa7b2|cd8c8fe6d8cf889f|-1356226452|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104141_46000.xml|t19492.7178472222s|0917019dceaf54c4|147078|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_3baad24d|branch|2318ea7c25e635cf|1751b100d8ffa7b2|3169ec85242e8b80|-158297356|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230501_130904_49000.xml|t19492.7178472222s|172fdc7a02318392|148564|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_7444ae60|branch|14ecf17505fd5f10|1751b100d8ffa7b2|80d733f633380b2f|-603996842|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104136_09000.xml|t19492.7178472222s|bd68486dd804c5cb|84295|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_8c5ac328|branch|817b18c1792378ac|1751b100d8ffa7b2|46d3d32bb97e920b|-1638994336|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104212_18000.xml|t19492.7178472222s|0543924980ad826f|145669|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_bcf3310c|branch|7b5061bd7d184a69|1751b100d8ffa7b2|ca46cec7ed12a8c1|-62542964|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104221_73000.xml|t19492.7178587963s|43d427b2d49efd42|146814|file|local|vector|ecg_xml_files||0||
+ecg_xml_files_files|stem|13654152accce27f|f028a8388cca568a|091dccadfecd9440|-1241648308||t19492.9338624522s|bf1a1ce7cd804ab5|251|rds|local|vector||ecg_xml_files_files_f0f1b34e*ecg_xml_files_files_0449fd95*ecg_xml_files_files_2ac3e462*ecg_xml_files_files_0aa1b34c*ecg_xml_files_files_7dbf9b65*ecg_xml_files_files_dd82b500|0.002||
+find_data_folder|function|ec3afe9e4f45d427|||||||||||||||
+find_ecg_files|function|0f8a593768cfc965|||||||||||||||
