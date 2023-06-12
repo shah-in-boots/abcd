@@ -39,3 +39,16 @@ Sys.setenv(
 	AWS_REGION = "us-east-2"
 )
 ```
+
+# ECG Analysis
+
+Pipeline for feature extraction:
+
+1. Convert ECG full disclosure data into XML (can be done through MUSE)
+1. Subsequently convert XML format to WFDB format for signal analysis and annotation
+1. QRS annotation files can be created
+1. Segmentation can be performed if in sinus rhythm (may or may not be accurate)
+1. Can generate GEH data from 12-lead ECG with orthogonal points
+1. Generate HRV indices off of 10-second ECG lead
+1. Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
+1. Generate median beats
