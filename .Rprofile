@@ -1,0 +1,3 @@
+options(
+	clustermq.schedule = "slurm"
+)
