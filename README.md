@@ -40,6 +40,8 @@ Sys.setenv(
 )
 ```
 
+Code examples stored on Evernote
+
 # ECG Analysis
 
 Pipeline for feature extraction:
@@ -52,3 +54,4 @@ Pipeline for feature extraction:
 1. Generate HRV indices off of 10-second ECG lead
 1. Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
 1. Generate median beats
+
