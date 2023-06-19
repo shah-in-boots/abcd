@@ -11,7 +11,7 @@
 #SBATCH --output={{ log_file | /dev/null }}
 #SBATCH --error={{ log_file | /dev/null }}
 
-module load R/4.1.2-foss-2021b
+module load R/4.1.2-foss-2021b Anaconda3/2022.05
 
 ulimit -v $(( 1024 * {{ mem_cpu | 1024 }} ))
-CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
+CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ main }}")'
