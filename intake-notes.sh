@@ -13,4 +13,6 @@ printf 'Loading modules\n'
 module load R/4.1.2-foss-2021b Anaconda3/2022.05
 
 printf 'Using R\n'
-Rscript /shared/home/ashah282/projects/cbcd/R/intake-notes.R
+R CMD BATCH /shared/home/ashah282/projects/cbcd/R/intake-notes.R
+
+printf 'Completed notes task\n'
