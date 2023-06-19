@@ -12,7 +12,5 @@
 printf 'Loading modules\n'
 module load R/4.1.2-foss-2021b Anaconda3/2022.05
 
-
-
 ulimit -v $(( 1024 * {{ mem_cpu | 1024 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ main }}")'
