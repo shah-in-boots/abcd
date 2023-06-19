@@ -1,0 +1,2 @@
+#!/usr/bin/env Rscript
+cat("Hello, world!\n")
