@@ -1,0 +1,14 @@
+#!/bin/sh
+#SBATCH --job-name={{ job_name }} # job name
+#SBATCH --array=1-{{ n_jobs }} # number of processes
+#SBATCH --partition={{ queue | medium }} # name of queue
+#SBATCH --qos={{ service | normal }} # which special QOS (short/long)
+#SBATCH --time={{ walltime | 12:00:00 }} # walltime in hh:mm:ss
+#SBATCH --cpus-per-task={{ n_cpu | 1 }} # set cores per task
+#SBATCH --mem-per-cpu={{ mem_cpu | 1024 }} # set min memory per core
+#SBATCH --nodes={{ nodes | 1 }} # if 1 put load on one node
+#SBATCH --output={{ log_file | /dev/null }}
+#SBATCH --error={{ log_file | /dev/null }}
+
+ulimit -v $(( 1024 * {{ mem_cpu | 1024 }} ))
+CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
