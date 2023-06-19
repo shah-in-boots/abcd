@@ -4,7 +4,7 @@
 #SBATCH --qos=short
 #SBATCH --nodes=8
 #SBATCH --tasks-per-node=2
-#SBATCH --cpus-per-task=2 		# Number of cores per task
+#SBATCH --cpus-per-task=1 		# Number of cores per task
 #SBATCH --job-name=Notes
 #SBATCH --error=Notes.%J.stderr
 #SBATCH --output=Notes.%J.stdout
