@@ -1,4 +1,6 @@
 #!/bin/sh
+#SBATCH --account=CARDIO_DARBAR
+#SBATCH --comment=CARDIO_DARBAR
 #SBATCH --job-name={{ job_name }} # job name
 #SBATCH --array=1-{{ n_jobs }} # number of processes
 #SBATCH --partition={{ queue | medium }} # name of queue
