@@ -2,6 +2,17 @@
 
 ## Clinical data
 
+Number of CSV files... 
+
+-	diagnosis.csv
+-	labs.csv
+-	medications.csv
+-	notes.csv
+-	procedure-reports.csv
+-	procedures.csv
+-	visits.csv
+-	vitals.csv
+
 ## ECG Data
 
 musexmlex.py : The Python script used to read the MUSE XML files and export a '.csv' file, suitable for import into other programs.
