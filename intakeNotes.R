@@ -1,2 +1,6 @@
 #!/usr/bin/env Rscript
-cat("Hello, world!\n")
+
+library(tidyverse)
+
+pwd <- getwd()
+readr::write_lines(pwd, file = "notes.txt")
