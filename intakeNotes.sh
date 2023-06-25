@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-#SBATCH --partition=cpu-t3
+#SBATCH --partition=cpu-c5
 #SBATCH --job-name=intakeNotes
 #SBATCH --nodes=1
-#SBATCH --tasks-per-node=2
-#SBATCH --cpus-per-task=1 		# Number of cores per task
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=8 		# Number of cores per task
 #SBATCH --error=slurm-%J.err
 #SBATCH --output=slurm-%J.out
-#SBATCH --mail-user=$USER@uic.edu
+#SBATCH --mail-user=ashah282@uic.edu
 #SBATCh --mail-type=END
 
 printf 'Loading modules\n'

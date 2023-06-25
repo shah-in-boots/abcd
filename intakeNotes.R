@@ -2,9 +2,9 @@
 
 library(tidyverse)
 library(data.table)
-library(foreach)
 library(fs)
 library(doMC)
+library(foreach)
 readr::write_lines("Loaded libraries\n", file = "notes.txt")
 
 # Get SLURM variable
@@ -13,17 +13,23 @@ numCPU <-
 	as.numeric()
 readr::write_lines(paste(numCPU, "CPUs available\n"), file = "notes.txt", append = TRUE)
 
-# Register number of CPUs available
-registerDoMC(cores = numCPU)
-
 # From PWD, data should be in data folder
 fileNames <- fs::dir_ls("data/ccts/raw", glob = "*.csv")
 numFiles <- length(fileNames)
 readr::write_lines(paste(numFiles, "files to analyze\n"), file = "notes.txt", append = TRUE)
 
-foreach(i = 1:numFiles) %dopar% {
+# Register cores
+doMC::registerDoMC(cores = numCPU)
+readr::write_lines("Registering cores...\n", file = "notes.txt", append = TRUE)
+
+# Foreach loop
+foreach (i = 1:numFiles) %dopar% {
 	x <- fread(fileNames[i], nrows = 100)
-	fwrite(x, file = fileNames[i])
+
+	# Reconstruct new path
+	fp <- fs::path("data", "ccts", "proc", fs::path_file(fileNames[i]))
+	fwrite(x, file = fp)
+	readr::write_lines(paste(fileNames[i], " is being written\n"), file = "notes.txt", append = TRUE)
 }
 
 readr::write_lines("Files are now written in main folder", file = "notes.txt", append = TRUE)
