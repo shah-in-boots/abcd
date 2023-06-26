@@ -2,16 +2,23 @@
 
 ## Clinical data
 
-Number of CSV files... 
+Number of CSV files...
 
--	diagnosis.csv
--	labs.csv
--	medications.csv
--	notes.csv
--	procedure-reports.csv
--	procedures.csv
--	visits.csv
--	vitals.csv
+-   diagnosis.csv
+-   labs.csv
+-   medications.csv
+-   notes.csv
+-   procedure-reports.csv
+-   procedures.csv
+-   visits.csv
+-   vitals.csv
+
+General data structure is...
+
+| Item | Description |
+| - | ---- |
+| RECORD_ID | Unique identifier |
+| ENCOUNTER_ID | Specific encounter data collected, likely similar to DATE/TIME |
 
 ## ECG Data
 
@@ -37,17 +44,17 @@ For example:
 
 Exports the ECG rhythm stored in the XML file to a file named 'MUSE_FILE.csv', assuming the following:
 
-a. The Python script 'musexmlex.py' is in the current-working directory.
-b. The file 'MUSE_FILE.xml' is in the current-working directory.
-c. Python is installed on the machine, and it is in the system path.
+a.  The Python script 'musexmlex.py' is in the current-working directory.
+b.  The file 'MUSE_FILE.xml' is in the current-working directory.
+c.  Python is installed on the machine, and it is in the system path.
 
 ## AWS access
 
 AWS ID = CARDIO_DARBAR
 
-```
+```         
 Sys.setenv(
-	AWS_REGION = "us-east-2"
+    AWS_REGION = "us-east-2"
 )
 ```
 
@@ -57,12 +64,11 @@ Code examples stored on Evernote
 
 Pipeline for feature extraction:
 
-1. Convert ECG full disclosure data into XML (can be done through MUSE)
-1. Subsequently convert XML format to WFDB format for signal analysis and annotation
-1. QRS annotation files can be created
-1. Segmentation can be performed if in sinus rhythm (may or may not be accurate)
-1. Can generate GEH data from 12-lead ECG with orthogonal points
-1. Generate HRV indices off of 10-second ECG lead
-1. Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
-1. Generate median beats
-
+1.  Convert ECG full disclosure data into XML (can be done through MUSE)
+2.  Subsequently convert XML format to WFDB format for signal analysis and annotation
+3.  QRS annotation files can be created
+4.  Segmentation can be performed if in sinus rhythm (may or may not be accurate)
+5.  Can generate GEH data from 12-lead ECG with orthogonal points
+6.  Generate HRV indices off of 10-second ECG lead
+7.  Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
+8.  Generate median beats
