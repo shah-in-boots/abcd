@@ -7,6 +7,14 @@ library(doMC)
 library(foreach)
 readr::write_lines("Loaded libraries\n", file = "notes.txt")
 
+# Which folder will be used
+user <- Sys.info()['user']
+if (user == "ashah282") {
+	folder <- "data"
+} else if (user == "asshah4") {
+	folder <- "tests"
+}
+
 # Get number of computer cores available (essentially CPUs)
 numCPU <-
 	Sys.getenv("SLURM_CPUS_PER_TASK") |>
@@ -27,7 +35,7 @@ readr::write_lines("Registering cores...\n", file = "notes.txt", append = TRUE)
 
 # Foreach loop
 foreach (i = 1:numFiles) %dopar% {
-	x <- fread(fileNames[i], nrows = 100)
+	x <- fread(fileNames[i], nrows = 1000)
 
 	# Reconstruct new path
 	fp <- fs::path("data", "ccts", "proc", fs::path_file(fileNames[i]))
