@@ -14,6 +14,7 @@ if (user == "ashah282") {
 } else if (user == "asshah4") {
 	folder <- "tests"
 }
+readr::write_lines(paste("'", user, "'", "account utilized\n"), file = "notes.txt", append = TRUE)
 
 # Get number of computer cores available (essentially CPUs)
 numCPU <-
