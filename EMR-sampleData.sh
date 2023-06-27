@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #SBATCH --partition=cpu-c5
-#SBATCH --job-name=intakeNotes
+#SBATCH --job-name=makeSampleNotes
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=8 		# Number of cores per task

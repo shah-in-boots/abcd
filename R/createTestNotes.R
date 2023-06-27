@@ -39,7 +39,7 @@ write_lines("Registering cores...\n", file = "notes.txt", append = TRUE)
 # Foreach loop which will run on the different cores
 foreach (i = 1:numFiles) %dopar% {
 	# Reconstruct new path
-	x <- fread(filePaths[i])
+	x <- fread(filePaths[i], nrows = 1000)
 	fp <- fs::path(main, "ccts", "proc", fileNames[i])
 	fwrite(x, file = fp)
 	write_lines(paste(fileNames[i], " is being written\n"), file = "notes.txt", append = TRUE)
