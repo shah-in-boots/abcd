@@ -5,16 +5,16 @@ library(data.table)
 library(fs)
 library(doMC)
 library(foreach)
-readr::write_lines("Loaded libraries\n", file = "notes.txt")
+write_lines("Loaded libraries\n", file = "notes.txt")
 
 # Which folder will be used
 user <- Sys.info()['user']
 if (user == "ashah282") {
-	folder <- "data"
+	main <- "data"
 } else if (user == "asshah4") {
-	folder <- "tests"
+	main <- "tests"
 }
-readr::write_lines(paste("'", user, "'", "account utilized\n"), file = "notes.txt", append = TRUE)
+write_lines(paste("'", user, "'", "account utilized\n"), file = "notes.txt", append = TRUE)
 
 # Get number of computer cores available (essentially CPUs)
 numCPU <-
@@ -23,25 +23,26 @@ numCPU <-
 if (is.na(numCPU)) {
 	numCPU <- parallel::detectCores()
 }
-readr::write_lines(paste(numCPU, "CPUs available\n"), file = "notes.txt", append = TRUE)
+write_lines(paste(numCPU, "CPUs available\n"), file = "notes.txt", append = TRUE)
 
 # From PWD, data should be in data folder
-fileNames <- fs::dir_ls("data/ccts/raw", glob = "*.csv")
+filePaths <- fs::dir_ls(fs::path(main, "ccts", "raw"), glob = "*.csv")
+fileNames <- fs::path_file(filePaths) 
 numFiles <- length(fileNames)
-readr::write_lines(paste(numFiles, "files to analyze\n"), file = "notes.txt", append = TRUE)
+write_lines(paste(numFiles, "files to analyze:\n"), file = "notes.txt", append = TRUE)
+write_lines(paste("\tFile = ", filePaths, "\n"), file = "notes.txt", append = TRUE)
 
 # Register cores
 doMC::registerDoMC(cores = numCPU)
-readr::write_lines("Registering cores...\n", file = "notes.txt", append = TRUE)
+write_lines("Registering cores...\n", file = "notes.txt", append = TRUE)
 
-# Foreach loop
+# Foreach loop which will run on the different cores
 foreach (i = 1:numFiles) %dopar% {
-	x <- fread(fileNames[i], nrows = 1000)
-
 	# Reconstruct new path
-	fp <- fs::path(folder, "ccts", "proc", fs::path_file(fileNames[i]))
+	x <- fread(filePaths[i])
+	fp <- fs::path(main, "ccts", "proc", fileNames[i])
 	fwrite(x, file = fp)
-	readr::write_lines(paste(fileNames[i], " is being written\n"), file = "notes.txt", append = TRUE)
+	write_lines(paste(fileNames[i], " is being written\n"), file = "notes.txt", append = TRUE)
 }
 
-readr::write_lines("Files are now written in main folder", file = "notes.txt", append = TRUE)
+write_lines("Files are now written in main folder", file = "notes.txt", append = TRUE)

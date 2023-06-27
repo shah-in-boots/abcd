@@ -16,7 +16,7 @@ module load R/4.1.2-foss-2021b
 
 printf 'Using R\n'
 echo $PWD
-Rscript --vanilla ./R/intakeNotes.R
+Rscript --vanilla ./R/createTestNotes.R
 
 printf 'Completed notes task\n'
 module purge
