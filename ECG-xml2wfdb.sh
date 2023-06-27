@@ -5,11 +5,11 @@
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=1 		# Number of cores per task
-#SBATCH --error=slurm-%J.err
-#SBATCH --output=slurm-%J.out
+#SBATCH --array=1-18
+#SBATCH --error=slurm-%A_%a.err
+#SBATCH --output=slurm-%A_%a.out
 #SBATCH --mail-user=ashah282@uic.edu
 #SBATCH --mail-type=END
-#SBATCH --array=1-18
 
 printf 'Load modules\n'
 module load R/4.1.2-foss-2021b
