@@ -10,9 +10,10 @@ library(fs)
 
 home <- fs::path_expand("~")
 main <- fs::path("projects", "cbcd")
-folder <- fs::path(home, main, "data", "muse", folderName)
+inputFolder <- fs::path(home, main, "data", "muse", folderName)
+outputFolder <- fs::path(home, main, "data", "wfdb")
 
-filePaths <- fs::dir_ls(path = folder, glob = "*.xml")
+filePaths <- fs::dir_ls(path = inputFolder, glob = "*.xml")
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
 
 for (i in seq_along(filePaths)) {
