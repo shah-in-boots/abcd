@@ -20,4 +20,6 @@ config=/shared/home/ashah282/projects/cbcd/data/muse/config.txt
 sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $config)
 echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
 
+# R script will need name of folder before it "goes ham"
+Rscript --vanilla ./R/convertXMLtoWFDB.R --args $sample
 #Rscript --vanilla ./R/createTestNotes.R
