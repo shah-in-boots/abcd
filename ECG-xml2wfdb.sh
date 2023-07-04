@@ -22,4 +22,3 @@ echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sampl
 
 # R script will need name of folder before it "goes ham"
 Rscript --vanilla ./R/convertXMLtoWFDB.R --args $sample
-#Rscript --vanilla ./R/createTestNotes.R
