@@ -5,5 +5,5 @@ args <- commandArgs(trailingOnly = TRUE)
 n <- as.integer(args[1])
 msg <- paste0("The SLURM is running a batch job. This is on the n=`", n, "` array job ID.")
 
-library(readr)
-readr::write_lines(msg, con = "test.txt")
+# Write out to a temp file
+writeLines(msg, con = "test.txt")

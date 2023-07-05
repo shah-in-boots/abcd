@@ -13,7 +13,7 @@ printf 'Do not load any modules\n'
 echo $PWD
 
 # Rscript that shouldn't fail...
-Rscript --vanilla /shared/home/ashah282/projects/cbcd/tests/code/test-simple.R
+Rscript --vanilla /shared/home/ashah282/projects/cbcd/tests/sandbox/test-simple.R
 
 Rversion=$(R --version)
 echo $Rversion

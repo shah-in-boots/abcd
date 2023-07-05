@@ -7,9 +7,9 @@
 #SBATCH --cpus-per-task=1 		# Number of cores per task
 #SBATCH --array=1-2
 
-printf 'Loading modules\n'
-module load R/4.1.2-foss-2021b 
+printf 'No loading modules\n'
+#module load R/4.1.2-foss-2021b 
 
 # Rscript that shouldn't fail...
-Rscript --vanilla /shared/home/ashah282/projects/cbcd/tests/code/test.R --args $SLURM_ARRAY_TASK_ID
+Rscript --vanilla /shared/home/ashah282/projects/cbcd/tests/sandbox/test-array.R --args $SLURM_ARRAY_TASK_ID
 
