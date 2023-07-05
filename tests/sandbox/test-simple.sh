@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=cpu-t2
+#SBATCH --partition=cpu-t3
 #SBATCH --qos=short
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
@@ -8,7 +8,7 @@
 #SBATCH --error=slurm-%J.err
 #SBATCH --output=slurm-%J.out
 
-printf 'Do not load any modules\n'
+printf 'Load modules with R > 4.0\n'
 #module load R/4.1.2-foss-2021b 
 echo $PWD
 
