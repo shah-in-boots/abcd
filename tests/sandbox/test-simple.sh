@@ -9,7 +9,7 @@
 #SBATCH --output=slurm-%J.out
 
 printf 'Load modules with R > 4.0\n'
-#module load R/4.1.2-foss-2021b 
+module load R/4.1.2-foss-2021b 
 echo $PWD
 
 # Rscript that shouldn't fail...
