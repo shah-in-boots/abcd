@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Expect argument that is string variable 
+# Expect argument that is string variable
 args <- commandArgs(trailingOnly = TRUE)
 folderName <- as.character(args[1])
 
@@ -9,7 +9,7 @@ library(shiva)
 library(fs)
 
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd")
+main <- fs::path("projects", "cbcd", "sandbox")
 inputFolder <- fs::path(home, main, "data", "muse", folderName)
 outputFolder <- fs::path(home, main, "data", "wfdb")
 
@@ -33,4 +33,4 @@ for (i in seq_along(filePaths)) {
 
 }
 
- 
+
