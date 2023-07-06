@@ -4,6 +4,8 @@
 args <- commandArgs(trailingOnly = TRUE)
 folderName <- as.character(args[1])
 
+print(folderName)
+
 # Libraries
 library(shiva)
 library(fs)
@@ -26,7 +28,7 @@ for (i in seq_along(filePaths)) {
 		data = sig,
 		type = "muse",
 		record = fileNames[i],
-		record_dir = folder,
+		record_dir = outputFolder,
 		wfdb_path = "/shared/home/ashah282/bin",
 		header = hea
 	)
