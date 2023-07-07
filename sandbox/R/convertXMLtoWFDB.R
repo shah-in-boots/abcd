@@ -4,8 +4,6 @@
 args <- commandArgs(trailingOnly = TRUE)
 folderName <- as.character(args[1])
 
-print(folderName)
-
 # Libraries
 library(shiva)
 library(fs)
@@ -23,6 +21,8 @@ for (i in seq_along(filePaths)) {
 	ecg <- shiva::read_muse(filePaths[i])
 	sig <- vec_data(ecg)
 	hea <- attr(ecg, "header")
+
+	print(paste("Will write", fileNames[i], "to", outputFolder))
 
 	shiva::write_wfdb(
 		data = sig,

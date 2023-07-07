@@ -6,8 +6,8 @@
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=1 		# Number of cores per task
 #SBATCH --array=1-2
-#SBATCH --error=slurm-%A_%a.err
-#SBATCH --output=slurm-%A_%a.out
+#SBATCH --error=slurm-%A-%a.err
+#SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
 #SBATCH --mail-type=END
 
@@ -21,4 +21,4 @@ sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $c
 echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
 
 # R script will need name of folder before it "goes ham"
-Rscript --vanilla --args $sample ./R/convertXMLtoWFDB.R
+Rscript R/convertXMLtoWFDB.R $sample
