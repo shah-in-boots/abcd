@@ -6,12 +6,16 @@ folderName <- as.character(args[1])
 
 # Libraries
 library(shiva)
+library(readr)
 library(fs)
 
 home <- fs::path_expand("~")
 main <- fs::path("projects", "cbcd", "sandbox")
 inputFolder <- fs::path(home, main, "data", "muse", folderName)
-outputFolder <- fs::path(home, main, "data", "wfdb")
+outputFolder <- fs::path(home, main, "data", "wfdb", folderName)
+
+# Create log file within folder
+readr::write_lines(paste("LOG", folderName), file = fs::path(outputFolder, "log.txt"), append = FALSE)
 
 filePaths <- fs::dir_ls(path = inputFolder, glob = "*.xml")
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
@@ -22,7 +26,7 @@ for (i in seq_along(filePaths)) {
 	sig <- vec_data(ecg)
 	hea <- attr(ecg, "header")
 
-	print(paste("Will write", fileNames[i], "to", outputFolder))
+	readr::write_lines(fileNames[i], file = fs::path(outputFolder, "log.txt"), append = TRUE)
 
 	shiva::write_wfdb(
 		data = sig,
