@@ -8,6 +8,9 @@ folderName <- as.character(args[1])
 library(shiva)
 library(readr)
 library(fs)
+library(foreach)
+library(doParallel)
+
 
 home <- fs::path_expand("~")
 main <- fs::path("projects", "cbcd", "sandbox")
@@ -19,8 +22,13 @@ readr::write_lines(paste("LOG", folderName), file = fs::path(outputFolder, "log.
 
 filePaths <- fs::dir_ls(path = inputFolder, glob = "*.xml")
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
+n <- length(filePaths)
 
-for (i in seq_along(filePaths)) {
+# Setup parallelization
+nCPU <- parallel::detectCores()
+doParallel::registerDoParallel(cores = nCPU)
+
+foreach (i = 1:n) %dopar% {
 
 	ecg <- shiva::read_muse(filePaths[i])
 	sig <- vec_data(ecg)
@@ -33,7 +41,6 @@ for (i in seq_along(filePaths)) {
 		type = "muse",
 		record = fileNames[i],
 		record_dir = outputFolder,
-		wfdb_path = "/shared/home/ashah282/bin",
 		header = hea
 	)
 

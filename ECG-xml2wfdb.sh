@@ -1,13 +1,13 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=convertECGtoWFDB
-#SBATCH --nodes=18
+#SBATCH --job-name=sampleConversionMuse
+#SBATCH --nodes=21
 #SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=1 		# Number of cores per task
-#SBATCH --array=1-18
-#SBATCH --error=slurm-%A_%a.err
-#SBATCH --output=slurm-%A_%a.out
+#SBATCH --cpus-per-task=2		# Number of cores per task
+#SBATCH --array=1-21
+#SBATCH --error=slurm-%A-%a.err
+#SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
 #SBATCH --mail-type=END
 
@@ -21,4 +21,4 @@ sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $c
 echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
 
 # R script will need name of folder before it "goes ham"
-Rscript --vanilla ./R/convertXMLtoWFDB.R --args $sample
+Rscript R/convertXMLtoWFDB.R $sample
