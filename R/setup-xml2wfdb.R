@@ -6,7 +6,7 @@ library(fs)
 
 # Paths
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd", "sandbox")
+main <- fs::path("projects", "cbcd")
 
 # MUSE ----
 

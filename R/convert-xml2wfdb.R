@@ -16,7 +16,7 @@ library(doParallel)
 
 # Paths
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd", "sandbox")
+main <- fs::path("projects", "cbcd")
 inputFolder <- fs::path(home, main, "data", "muse", folderName)
 outputFolder <- fs::path(home, main, "data", "wfdb", folderName)
 
