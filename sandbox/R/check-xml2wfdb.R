@@ -36,7 +36,7 @@ for (i in seq_along(museFolders)) {
 	folderName <- fs::path_file(folderPath)
 
 	xmlFiles <-
-		fs::dir_ls(folderName, glob = "*.xml") |>
+		fs::dir_ls(folderPath, glob = "*.xml") |>
 		fs::path_file() |>
 		fs::path_ext_remove()
 
