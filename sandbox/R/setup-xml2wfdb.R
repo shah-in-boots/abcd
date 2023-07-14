@@ -19,7 +19,9 @@ museContents <- fs::path(museDir, "contents.tsv")
 if (!fs::file_exists(museContents)) {
 	fs::file_create(museContents)
 	readr::write_lines("FOLDER\tNAME", file = museContents)
-	cat("Creating MUSE directory file at...\n", museContents)
+	cat("Creating MUSE directory file at...\n\n", museContents)
+} else {
+	cat("MUSE directory already exists.\n\n")
 }
 
 # WFDB ----
@@ -31,7 +33,9 @@ wfdbContents <- fs::path(wfdbDir, "contents.tsv")
 if (!fs::file_exists(wfdbContents)) {
 	fs::file_create(wfdbContents)
 	readr::write_lines("FOLDER\tNAME", file = wfdbContents)
-	cat("Creating WFDB directory file at...\n", wfdbContents)
+	cat("Creating WFDB directory file at...\n", wfdbContents, "\n\n")
+} else {
+	cat("WFDB directory already exists.\n\n")
 }
 
 # Check if each folder has a logging file or not
@@ -39,11 +43,13 @@ if (!fs::file_exists(wfdbContents)) {
 # Log files are .txt format
 for (i in seq_along(wfdbFolders)) {
 
-	folderName <- wfdbFolders[i]
-	logFile <- fs::path(folderName, "log.txt")
+	folderPath <- wfdbFolders[i]
+	logFile <- fs::path(folderPath, "log.txt")
 	if (!fs::file_exists(logFile)) {
 		fs::file_create(logFile)
-		cat("Creating WFDB log file at...\n", logFile)
+		cat("Creating WFDB log file at...\n", logFile, "\n")
+	} else {
+		cat("Log file for", fs::path_file(folderPath), "already exists.\n\n")
 	}
 
 }
