@@ -61,7 +61,7 @@ museDataNew <- dplyr::bind_rows(museDataList)
 n <- nrow(dplyr::setdiff(museDataNew, museDataOld))
 
 museDataUpdated <-
-	dplyr::bind_rows(museDataNew, log) |>
+	dplyr::bind_rows(museDataNew, museDataOld) |>
 	dplyr::distinct(NAME, .keep_all = TRUE)
 
 cat("When updating the MUSE directory, there were", n, "additions\n")
@@ -110,7 +110,7 @@ n <- nrow(dplyr::setdiff(wfdbDataNew, wfdbDataOld))
 # This script runs AFTER the conversion script is run
 # Allows for updates for errors and decreases speed issues)
 wfdbDataUpdated <-
-	dplyr::bind_rows(wfdbDataNew, log) |>
+	dplyr::bind_rows(wfdbDataNew, wfdbDataOld) |>
 	dplyr::distinct(NAME, .keep_all = TRUE)
 
 cat("When updating the WFDB file conversion list, there were", n, "new additions\n")
