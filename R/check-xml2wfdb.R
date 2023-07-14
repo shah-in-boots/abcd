@@ -103,7 +103,7 @@ for (i in seq_along(wfdbFolders)) {
 wfdbDataNew <- dplyr::bind_rows(wfdbDataList)
 
 # Number of duplicate or updating values
-n <- nrow(dplyr::setdiff(wfdbDataNew, wfdbDataOld))
+n <- length(setdiff(wfdbDataNew$NAME, wfdbDataOld$NAME))
 
 # Update WFDB log here
 # These are files that have already been processed
