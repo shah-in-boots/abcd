@@ -26,10 +26,10 @@ museLog <- fs::path(museDir, "contents.tsv")
 
 # Read in if pre-existing data exists
 cat("Reading in the MUSE directory of files located at...\n", museLog, "\n\n")
-log <- readr::read_tsv(museLog)
+museDataOld <- readr::read_tsv(museLog)
 
 # Check / make a list of all MUSE files
-museList <- list()
+museDataList <- list()
 
 cat("Will now loop through", length(museFolders), "located at...\n", museDir, "\n\n")
 for (i in seq_along(museFolders)) {
@@ -44,29 +44,29 @@ for (i in seq_along(museFolders)) {
 		fs::path_ext_remove()
 	cat("There are", length(xmlFiles), "in", folderName, "\n\n")
 
-	museList[[i]] <-
+	museDataList[[i]] <-
 		tibble::tibble(
 			FOLDER = folderName,
 			NAME = xmlFiles
 		)
 }
 
-museTable <- dplyr::bind_rows(museList)
+museDataNew <- dplyr::bind_rows(museDataList)
 
 # Compare to log file to create/append as needed
 # Will compare based on museTable as being most "recent"
 # Will use the new folder location
 
 # Number of duplicate or updating values
-n <- nrow(dplyr::setdiff(museTable, log))
+n <- nrow(dplyr::setdiff(museDataNew, museDataOld))
 
-updatedLog <-
-	dplyr::bind_rows(museTable, log) |>
+museDataUpdated <-
+	dplyr::bind_rows(museDataNew, museDataOld) |>
 	dplyr::distinct(NAME, .keep_all = TRUE)
 
 cat("When updating the MUSE directory, there were", n, "additions\n")
 cat("These will be written back to...\n", museLog, "\n\n")
-readr::write_tsv(updatedLog, file = museLog)
+readr::write_tsv(museDataUpdated, file = museLog)
 
 # WFDB ----
 
@@ -77,10 +77,10 @@ wfdbLog <- fs::path(wfdbDir, "contents.tsv")
 # Read-in pre-existing contents that were "already ran"
 # Will then add/update with individual logs created within directories
 cat("Reading in the WFDB directory of files located at...\n", wfdbLog, "\n\n")
-log <- readr::read_tsv(wfdbLog)
+wfdbDataOld <- readr::read_tsv(wfdbLog)
 
 # Needs to be updated for what XML files were converted
-wfdbList <- list()
+wfdbDataList <- list()
 cat("Will now loop through", length(wfdbFolders), "located at...\n", wfdbDir, "\n\n")
 for (i in seq_along(wfdbFolders)) {
 
@@ -93,26 +93,26 @@ for (i in seq_along(wfdbFolders)) {
 		readr::read_lines()
 	cat("There are", length(logData), "WFDB-formated files in", folderName, "\n\n")
 
-	wfdbList[[i]] <-
+	wfdbDataList[[i]] <-
 		tibble::tibble(
 			FOLDER = folderName,
 			NAME = logData
 		)
 }
 
-wfdbTable <- dplyr::bind_rows(wfdbList)
+wfdbDataNew <- dplyr::bind_rows(wfdbDataList)
 
 # Number of duplicate or updating values
-n <- nrow(dplyr::setdiff(wfdbTable, log))
+n <- nrow(dplyr::setdiff(wfdbDataNew, wfdbDataOld))
 
 # Update WFDB log here
 # These are files that have already been processed
 # This script runs AFTER the conversion script is run
 # Allows for updates for errors and decreases speed issues)
-updatedLog <-
-	dplyr::bind_rows(wfdbTable, log) |>
+wfdbDataUpdated <-
+	dplyr::bind_rows(wfdbDataNew, log) |>
 	dplyr::distinct(NAME, .keep_all = TRUE)
 
 cat("When updating the WFDB file conversion list, there were", n, "new additions\n")
 cat("These will be written back to...\n", wfdbLog, "\n\n")
-readr::write_tsv(updatedLog, file = wfdbLog)
+readr::write_tsv(wfdbDataUpdated, file = wfdbLog)
