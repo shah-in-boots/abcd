@@ -12,7 +12,7 @@
 #SBATCH --mail-type=END
 
 printf 'Load modules\n'
-module load R/4.1.2-foss-2021b
+module load R/4.2.1-foss-2022a
 
 # There needs to be a job for each folder in MUSE (e.g. 20)
 # Slurm IDs for each task to help tell us what is going on

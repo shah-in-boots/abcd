@@ -11,7 +11,7 @@
 #SBATCh --mail-type=END
 
 printf 'Loading modules\n'
-module load R/4.1.2-foss-2021b
+module load R/4.2.1-foss-2022a
 
 printf 'R script to be run'
 Rscript R/setup-xml2wfdb.R
