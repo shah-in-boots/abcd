@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=sampleConversionMuse
+#SBATCH --job-name=updateWFDB
 #SBATCH --nodes=21
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
@@ -26,10 +26,10 @@ echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sampl
 #		3. Update the directory to know which files have been converted
 
 # Setup, trivial command
-Rscript R/setup-xml2wfdb.R
+# Only needs to be run if new folders are added
+# Rscript R/setup-xml2wfdb.R
 
-# Parallel conversion
+# Parallel conversion to be run everytime
+# Followed by updating contents of folders
 Rscript R/convert-xml2wfdb.R $sample
-
-# Check and clean up log files
 Rscript R/check-xml2wfdb.R
