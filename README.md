@@ -72,3 +72,30 @@ Pipeline for feature extraction:
 6.  Generate HRV indices off of 10-second ECG lead
 7.  Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
 8.  Generate median beats
+
+# Phenotype AF
+
+In the main folder, "sh" files will exist that are essentially set-up / calls to run a batch command using SLURM.
+These will generally call either a bash/CL type series of commands or more likely call an R script that is held within the "./R/*" folder. 
+The R scripts will have more definitions on them about how to old. 
+
+## ECG analyses
+
+These will rely primarily on WFDB-based scripts, utilizing the XML files from MUSE which are converted to DAT and HEA files and other annotation files.
+
+### Conversion of XML to WFDB
+
+setup-xml2wfdb.R
+check-xml2wfdb.R
+convert-xml2wfdb.R
+
+### Identification of ECG diagnoses
+
+Identifying ECGs based on a diagnosis (e.g. AF):
+
+find-wfdb2diagnosis.R
+
+Identifying ECG based on MRNs:
+
+find-diagnosis2mrn.R
+
