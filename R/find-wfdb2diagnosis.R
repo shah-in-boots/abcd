@@ -27,7 +27,7 @@ cat("Identified", length(wfdbFolders), "folders to search through\n")
 # Get AF regex options via sourcing script from project directory
 source(fs::path(home, "projects", "cbcd", "regex.R"))
 af_regex <- paste0(af_regex, collapse = "|")
-afibDiagnosis <- fs::path(home, main, "output", "af-ecg-diagnosis", ext = "tsv")
+afibDiagnosis <- fs::path(home, main, "output", "ECG-AFDiagnosis", ext = "tsv")
 readr::write_lines("NAME\tMRN\tDATE\tTIME", file = afibDiagnosis)
 
 # Go through all the folders one-by-one
