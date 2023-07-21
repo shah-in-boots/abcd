@@ -17,7 +17,7 @@ library(tibble)
 
 # Paths
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd", "sandbox")
+main <- fs::path("projects", "cbcd")
 
 # WFDB specific
 wfdbDir <- fs::path(home, main, "data", "wfdb")

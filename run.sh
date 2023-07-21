@@ -13,7 +13,6 @@
 printf 'Loading modules\n'
 module load R/4.2.1-foss-2022a
 
-printf 'R script to be run:\n\n'
-Rscript R/setup-xml2wfdb.R
-Rscript R/check-xml2wfdb.R
+printf 'R script to be run:\n\'
+Rscript R/find-wfdb2diagnosis.R
 
