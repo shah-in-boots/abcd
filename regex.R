@@ -1,0 +1,8 @@
+af_regex <- c(
+	"afib",
+	"\\baf\\b",
+	"atrial\ flutter",
+	"atrial\ fibrillation",
+	"\\ba\\b\ fib",
+	"\\ba\\b\ flutter"
+)
