@@ -91,11 +91,8 @@ convert-xml2wfdb.R
 
 ### Identification of ECG diagnoses
 
-Identifying ECGs based on a diagnosis (e.g. AF):
+Identifying ECGs based on a diagnosis (e.g. AF), which creates and manipulates a file called "ECG-AFDiagnosis.tsv". This files contains a table of MUSE file names, MRNs, and dates and times. 
 
 find-wfdb2diagnosis.R
-
-Identifying ECG based on MRNs:
-
-find-diagnosis2mrn.R
+match-diagnosis2mrn.R
 
