@@ -21,7 +21,7 @@ library(collapse)
 
 # General paths
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd", "sandbox")
+main <- fs::path("projects", "cbcd")
 
 # Input file = MRNs of interest to abstract
 inputFile <- fs::path(home, main, "output", "ECG-AFDiagnosis", ext = "tsv")
