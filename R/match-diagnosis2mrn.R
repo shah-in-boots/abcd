@@ -24,13 +24,13 @@ home <- fs::path_expand("~")
 main <- fs::path("projects", "cbcd")
 
 # Input file = MRNs of interest to abstract
-inputFile <- fs::path(home, main, "output", "ECG-AFDiagnosis", ext = "tsv")
-mrnFile <- read_tsv(inputFile)
+inputFile <- fs::path(home, main, "output", "ECG-AFibDiagnosis", ext = "tsv")
+mrnFile <- readr::read_tsv(inputFile)
 mrnData <- collapse::funique(mrnFile$MRN)
 
 # Output file = Directory-like file of FOLDER, NAME, MRN, DATE, TIME
 outputFile <- fs::path(home, main, "output", "ECG-PatientList", ext = "tsv")
-write_lines("FOLDER\tNAME\tMRN\tDATE\tTIME", file = outputFile)
+readr::write_lines("FOLDER\tNAME\tMRN\tDATE\tTIME", file = outputFile)
 
 # WFDB specific paths
 wfdbDir <- fs::path(home, main, "data", "wfdb")
@@ -52,10 +52,18 @@ for (i in seq_along(wfdbFolders)) {
 
 	for (j in seq_along(headerFiles)) {
 
+		header <- readr::read_lines(headerFiles[j])
+
 		# Find MRN in header file
 		mrn <-
 			grep("\\bmrn\\b", header, ignore.case = TRUE, value = TRUE) |>
 			gsub("\\D", "", x = _)
+
+		if (length(mrn) > 1) {
+			mrn <- mrn[1]
+		} else if (length(mrn) == 0) {
+			mrn <- "MISSING_MRN" # Unlikely to be present
+		}
 
 		if (mrn %in% mrnData) {
 
@@ -76,7 +84,7 @@ for (i in seq_along(wfdbFolders)) {
 				TIME = tm
 			)
 
-			write_tsv(row, file = outputFile, append = TRUE)
+			readr::write_tsv(row, file = outputFile, append = TRUE)
 			cat("\t\tFound appropriate MRN ... ", nm, "\n")
 
 		}
