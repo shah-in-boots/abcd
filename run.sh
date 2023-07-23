@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=meds
+#SBATCH --job-name=dx
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2 		# Number of cores per task
@@ -14,5 +14,5 @@ printf 'Loading modules\n'
 module load R/4.2.1-foss-2022a
 
 printf 'R script to be run:\n\'
-Rscript R/filter-meds2id.R
+Rscript R/filter-dx2id.R
 
