@@ -1,27 +1,15 @@
+library(tidyverse)
+dx <- read_csv("./sandbox/data/ccts/raw/diagnosis.csv")
+labs <- read_csv("./sandbox/data/ccts/raw/labs.csv")
+meds <- read_csv("./sandbox/data/ccts/raw/medications.csv")
+notes <- read_csv("./sandbox/data/ccts/raw/notes.csv")
+proc <- read_csv("./sandbox/data/ccts/raw/procedure-records.csv")
+visits <- read_csv("./sandbox/data/ccts/raw/visits.csv")
+vitals <- read_csv("./sandbox/data/ccts/raw/vitals.csv")
 
-library(readr)
-string <-
-	read_lines(
-		"# diagnosis Sinus rhythm, with occasional, Premature ventricular complexes, Nonspecific T wave abnormality, Abnormal ECG
-rhythm is Atrial fibrillation noted
-afib
-Atrial fibrillation
-rhythm is Afib
-but could it be some a fib
-AF rhythm
-Atrial Flutter or afib
-AF
-Afib"
-	)
-
-af_regex <- c(
-	"afib",
-	"\\baf\\b",
-	"atrial\ flutter",
-	"atrial\ fibrillation",
-	"\\ba\\b\ fib",
-	"\\ba\\b\ flutter"
-)
-
-
-grep(af_regex[5], string, ignore.case = TRUE, value = TRUE)
+# MRNs from REDCAP with DEMO information
+# 	Record ID,	MRN, First / Last Name, Last 4 SSN, Birth date
+# 	If alive or not (patient status), death date, "cause"
+#		Sex, race, ethnicity, zipcode, census_tract, smoking status, insurance
+# 	Language, marital status, sexual orientation
+demo <- read_csv("./sandbox/data/ccts/raw/redcap-ids.csv")
