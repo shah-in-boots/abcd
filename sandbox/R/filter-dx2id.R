@@ -33,17 +33,17 @@ key <-
 	data.table::as.data.table()
 
 # This would be the labs obtained (where and when)
-# Roughly 3-4 Gb
-labs <-
-	fs::path(home, main, "data", "ccts", "raw", "labs", ext = "csv") |>
+# Roughly 1-2 Gb
+diagnosis <-
+	fs::path(home, main, "data", "ccts", "raw", "diagnosis", ext = "csv") |>
 	vroom::vroom() |>
 	janitor::clean_names() |>
-	dplyr::select(record_id, encounter_id, labtest_name, value, unit, result_date) |>
+	dplyr::select(record_id, encounter_id, start_date, icd10_code) |>
 	data.table::as.data.table()
 
 # Simple filter of demographic files based on MRN
-newLabs <- labs[key, on = "record_id"]
+newDiagnosis <- diagnosis[key, on = "record_id"]
 
 # Output file
-out <- fs::path(home, main, "data", "ccts", "proc", "labs", ext = "csv")
-vroom::vroom_write(newLabs, file = out)
+out <- fs::path(home, main, "data", "ccts", "proc", "diagnosis", ext = "csv")
+vroom::vroom_write(newDiagnosis, file = out)

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# `match-diagnosis2mrn` should be run after converting XML to WFDB format
+# `match-vitals2mrn` should be run after converting XML to WFDB format
 # It will create a list of MUSE ECGs based on an input file name.
 # The input file must be a TSV with a column of MRNs included
 # MRNs will then be sought out in the WFDB files.
@@ -33,17 +33,17 @@ key <-
 	data.table::as.data.table()
 
 # This would be the labs obtained (where and when)
-# Roughly 3-4 Gb
-labs <-
-	fs::path(home, main, "data", "ccts", "raw", "labs", ext = "csv") |>
+# Roughly 1-2 Gb
+vitals <-
+	fs::path(home, main, "data", "ccts", "raw", "vitals", ext = "csv") |>
 	vroom::vroom() |>
 	janitor::clean_names() |>
-	dplyr::select(record_id, encounter_id, labtest_name, value, unit, result_date) |>
+	dplyr::select(record_id, vital_name, value, unit, measurement_date) |>
 	data.table::as.data.table()
 
 # Simple filter of demographic files based on MRN
-newLabs <- labs[key, on = "record_id"]
+newVitals <- vitals[key, on = "record_id"]
 
 # Output file
-out <- fs::path(home, main, "data", "ccts", "proc", "labs", ext = "csv")
-vroom::vroom_write(newLabs, file = out)
+out <- fs::path(home, main, "data", "ccts", "proc", "vitals", ext = "csv")
+vroom::vroom_write(newVitals, file = out)

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# `match-diagnosis2mrn` should be run after converting XML to WFDB format
+# `match-visits2mrn` should be run after converting XML to WFDB format
 # It will create a list of MUSE ECGs based on an input file name.
 # The input file must be a TSV with a column of MRNs included
 # MRNs will then be sought out in the WFDB files.
@@ -32,18 +32,26 @@ key <-
 	janitor::clean_names() |>
 	data.table::as.data.table()
 
-# This would be the labs obtained (where and when)
-# Roughly 3-4 Gb
-labs <-
-	fs::path(home, main, "data", "ccts", "raw", "labs", ext = "csv") |>
+# This would be the visit data
+# Roughly 1-2 Gb
+visits <-
+	fs::path(home, main, "data", "ccts", "raw", "visits", ext = "csv") |>
 	vroom::vroom() |>
 	janitor::clean_names() |>
-	dplyr::select(record_id, encounter_id, labtest_name, value, unit, result_date) |>
+	dplyr::select(
+		record_id,
+		encounter_id,
+		encounter_type,
+		visit_type,
+		visit_start_date,
+		visit_end_date,
+		discharge_disposition
+	) |>
 	data.table::as.data.table()
 
 # Simple filter of demographic files based on MRN
-newLabs <- labs[key, on = "record_id"]
+newVisits <- visits[key, on = "record_id"]
 
 # Output file
-out <- fs::path(home, main, "data", "ccts", "proc", "labs", ext = "csv")
-vroom::vroom_write(newLabs, file = out)
+out <- fs::path(home, main, "data", "ccts", "proc", "visits", ext = "csv")
+vroom::vroom_write(newVisits, file = out)
