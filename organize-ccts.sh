@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --partition=cpu-m4
+#SBATCH --partition=cpu-t3
 #SBATCH --job-name=notes
 #SBATCH --nodes=14
 #SBATCH --tasks-per-node=1
@@ -19,5 +19,6 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
+# Remember to update partition if using large files (e.g. notes)
 printf "Splitting notes for: $year"
 Rscript R/split-notes.R $year
