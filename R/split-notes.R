@@ -26,10 +26,10 @@ dat <-
 			encounter_id = "ENCOUNTER_ID",
 			author_type = "AUTHOR_TYPE",
 			author_service = "SERVICE",
-			note_type = "NOTE_TYPE",
-			note_text = "NOTE_TEXT",
 			note_date = "NOTE_DATE",
-			edit_date = "LAST_EDITED_DATE"
+			edit_date = "LAST_EDITED_DATE",
+			note_type = "NOTE_TYPE",
+			note_text = "NOTE_TEXT"
 		)
 	) |>
 	dplyr::mutate(date = as.Date(note_date)) |>
