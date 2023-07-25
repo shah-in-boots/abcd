@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=vitals
+#SBATCH --job-name=medications
 #SBATCH --nodes=21
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
@@ -19,5 +19,5 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
-printf 'Splitting vitals for: $year'
-Rscript R/split-vitals.R $year
+printf 'Splitting medications for: $year'
+Rscript R/split-medications.R $year
