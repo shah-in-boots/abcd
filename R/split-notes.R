@@ -21,13 +21,13 @@ dataFile <- fs::path(home, main, "data", "ccts", "raw", fileName, ext = "csv")
 dat <-
 	dataFile |>
 	vroom::vroom(
+		col_types = "ncnnTTfffc",
 		col_select = c(
 			record_id = "RECORD_ID",
 			encounter_id = "ENCOUNTER_ID",
 			author_type = "AUTHOR_TYPE",
 			author_service = "SERVICE",
 			note_date = "NOTE_DATE",
-			edit_date = "LAST_EDITED_DATE",
 			note_type = "NOTE_TYPE",
 			note_text = "NOTE_TEXT"
 		)
