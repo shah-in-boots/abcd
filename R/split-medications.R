@@ -23,15 +23,19 @@ dat <-
 	vroom::vroom(
 		col_select = c(
 			record_id = "RECORD_ID",
-			encounter_id = "ENCOUNTER_ID",
-			date = "RESULT_DATE",
-			lab_name = "LABTEST_NAME",
-			lab_value = "VALUE",
-			lab_units = "UNIT"
+			medication = "MEDICATION_NAME",
+			start_date = "START_DATE",
+			end_date = "END_DATE"
 		),
-		col_types = "nnDccc"
+		col_types = "ncDD"
 	) |>
-	dplyr::mutate(date = as.Date(date)) |>
+	dplyr::mutate(start_date = lubridate::ymd_hms(start_date)) |>
+	dplyr::mutate(end_date = lubridate::ymd_hms(end_date)) |>
+	dplyr::mutate(date = as.Date(start_date)) |>
+	dplyr::mutate(date = dplyr::case_when(
+		2010 >= lubridate::year(date) ~ as.Date("2010-01-01"),
+		TRUE ~ date
+	)) |>
 	dplyr::filter(year == lubridate::year(date))
 
 # Output paths

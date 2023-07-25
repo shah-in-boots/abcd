@@ -23,15 +23,14 @@ dat <-
 	vroom::vroom(
 		col_select = c(
 			record_id = "RECORD_ID",
-			encounter_id = "ENCOUNTER_ID",
-			date = "RESULT_DATE",
-			lab_name = "LABTEST_NAME",
-			lab_value = "VALUE",
-			lab_units = "UNIT"
+			vital_name = "VITAL_NAME",
+			vital_value = "VALUE",
+			vital_units = "UNIT",
+			date_time = "MEASUREMENT_DATE"
 		),
-		col_types = "nnDccc"
+		col_types = "ncncT"
 	) |>
-	dplyr::mutate(date = as.Date(date)) |>
+	dplyr::mutate(date = as.Date(date_time)) |>
 	dplyr::filter(year == lubridate::year(date))
 
 # Output paths
