@@ -7,7 +7,8 @@ args <- commandArgs(trailingOnly = TRUE)
 folderName <- as.character(args[1])
 
 # Libraries
-library(tidyverse)
+library(lubridate)
+library(dplyr)
 library(vroom)
 library(fs)
 

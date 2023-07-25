@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --partition=cpu-t3
+#SBATCH --partition=cpu-m4
 #SBATCH --job-name=notes
 #SBATCH --nodes=14
 #SBATCH --tasks-per-node=1

@@ -2,7 +2,7 @@
 
 #SBATCH --partition=cpu-t3
 #SBATCH --job-name=wfdb
-#SBATCH --nodes=14
+#SBATCH --nodes=21
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
 #SBATCH --array=1-21
@@ -14,17 +14,9 @@
 printf 'Load modules\n'
 module load R/4.2.1-foss-2022a
 
-# Years setup (2010 to 2023 is 14...)
-years=($(seq 2010 2023))
-year=${years[$SLURM_14ARRAY_TASK_ID - 1]}
-
-echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
-
-echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
-
-# There needs to be a job for each folder in MUSE (e.g. 20)
+# There needs to be a job for each folder in MUSE (e.g. 21)
 # Slurm IDs for each task to help tell us what is going on
-config=/shared/home/ashah282/projects/cbcd/sandbox/config-wfdb.txt
+config=/shared/home/ashah282/projects/cbcd/config-wfdb.txt
 sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $config)
 echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
 
