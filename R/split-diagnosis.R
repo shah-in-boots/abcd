@@ -11,7 +11,7 @@ library(vroom)
 
 # Input paths
 home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd", "sandbox")
+main <- fs::path("projects", "cbcd")
 fileName <- "diagnosis"
 
 dataFile <- fs::path(home, main, "data", "ccts", "raw", fileName, ext = "csv")

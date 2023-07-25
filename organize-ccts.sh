@@ -19,5 +19,5 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
+printf 'Splitting diagnoses for: $year'
 Rscript R/split-diagnosis.R $year
-Rscript R/check-xml2wfdb.R
