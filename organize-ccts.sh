@@ -1,7 +1,7 @@
 #!/bin/sh
 
-#SBATCH --partition=cpu-m4
-#SBATCH --job-name=notes
+#SBATCH --partition=cpu-t3
+#SBATCH --job-name=procedure-reports
 #SBATCH --nodes=14
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
@@ -19,5 +19,5 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
-printf 'Splitting notes for: $year'
-Rscript R/split-notes.R $year
+printf "Splitting procedure-reports for: $year"
+Rscript R/split-procedure-reports.R $year
