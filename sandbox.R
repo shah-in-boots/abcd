@@ -13,3 +13,15 @@ vitals <- read_csv("./sandbox/data/ccts/raw/vitals.csv")
 #		Sex, race, ethnicity, zipcode, census_tract, smoking status, insurance
 # 	Language, marital status, sexual orientation
 demo <- read_csv("./sandbox/data/ccts/raw/redcap-ids.csv")
+
+# Visualize surface ECG ----
+
+library(shiva)
+library(tidyverse)
+sig <-
+	read_wfdb("MUSE_20230515_104804_37000", record_dir = "./sandbox/data/wfdb/051523/") |>
+	pivot_longer(cols = I:V6, names_to = "lead", values_to = "voltage")
+	ggplot(data = _, aes(x = sample, y = voltage, color = lead)) +
+	geom_line() +
+	facet_wrap(~lead, ncol = 1, scales = "free") +
+	theme_minimal()
