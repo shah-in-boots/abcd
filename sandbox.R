@@ -28,23 +28,15 @@ sig <-
 
 # Angela needs help on code ----
 
-dx <- read_csv("./sandbox/data/ccts/raw/diagnosis.csv")
+dx <-
+	read_csv("./output/AfibByLanguage-2023-07-31.csv") |>
+	select(birth_date, patient_status, death_date, gender, race, ethnicity, zipcode, census_tract, smoking_status, insurance_type, language) |>
+	filter(language %in% c("English", "Spanish"))
 
 dx |>
-	select(-starts_with("redcap"), -ENCOUNTER_ID) |>
-	filter(str_detect(ICD10_CODE, "I48*"))
+	select(-zipcode, -census_tract, -death_date) |>
+	tbl_summary(by = language) |>
+	add_p() |>
+	add_overall()
 
-
-# Get the diagnosis data set
-# Figure out which column is ICD codes
-# Identify if its an ICD9 or 10 code
-# If its an ICD9 code, convert it to ICD10
-tmp <-
-	dx |>
-	select(-starts_with("redcap"), -ENCOUNTER_ID) |> # ICD10_CODE
-	rename(ICD = ICD10_CODE) |>
-	mutate(ICD9_CODE = grepl("^ICD9CM", ICD)) |>
-	mutate(ICD10_CODE = !ICD9_CODE)
-
-tmp$ICD <- tmp$ICD10_CODE
-
+write_csv(dx, "./output/SpanishAfib-2023-07-31.csv")
