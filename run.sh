@@ -14,5 +14,5 @@ printf 'Loading modules\n'
 module load R/4.2.1-foss-2022a
 
 printf 'R script to be run:\n\'
-Rscript R/filter-dx2id.R
+Rscript R/filter-demoByAfib.R
 
