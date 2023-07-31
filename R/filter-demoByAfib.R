@@ -1,15 +1,8 @@
 #!/usr/bin/env Rscript
 
-# `match-diagnosis2mrn` should be run after converting XML to WFDB format
-# It will create a list of MUSE ECGs based on an input file name.
-# The input file must be a TSV with a column of MRNs included
-# MRNs will then be sought out in the WFDB files.
-#
-# Outputs a directory file with... (similar to directory structure)
-# 	FOLDER
-# 	NAME (MUSE_ID)
-# 	MRN
-# 	DATE + TIME
+# `filter-demo2mrn` requires a list of MRNs to extra demographics factors from
+# Can use a list of MRNs externally, or import our own from the REDCap ID file
+# Will create a smaller CSV file that can be put into the "output" folder
 
 # Libraries
 library(readr)
@@ -17,6 +10,7 @@ library(stringr)
 library(dplyr)
 library(fs)
 library(tibble)
+library(vroom)
 library(collapse)
 
 # General paths
@@ -36,11 +30,19 @@ demo <-
 		col_select = c(record_id, mrn:sexual_orientation)
 	)
 
-# Output file
-out <- fs::path(home, main, "data", "ccts", "proc", "redcap-ids", ext = "csv")
+# Create subset of data
+out <-
+	demo |>
+	dplyr::filter(mrn %in% mrnList)
 
-# Simple filter of demographic files based on MRN
-demo |>
-	dplyr::filter(mrn %in% mrnList) |>
-	vroom::vroom_write(file = out)
+
+# Output file
+outputFile <-
+	fs::path(home,
+					 main,
+					 "output",
+					 paste0("AfibByLanguage-", Sys.Date()),
+					 ext = "csv")
+
+vroom::vroom_write(out, file = outputFile, delim = ",")
 
