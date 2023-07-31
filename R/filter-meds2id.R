@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# `match-diagnosis2mrn` should be run after converting XML to WFDB format
+# `filter-*2id` should be run after converting XML to WFDB format
 # It will create a list of MUSE ECGs based on an input file name.
 # The input file must be a TSV with a column of MRNs included
 # MRNs will then be sought out in the WFDB files.
