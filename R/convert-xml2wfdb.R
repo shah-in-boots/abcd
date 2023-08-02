@@ -14,11 +14,14 @@
 library(shiva)
 library(readr)
 library(fs)
+library(foreach)
 library(parallel)
+library(doParallel)
 
 # Setup parallelization
 cat("Setup for processing of XML into WFDB files:\n\n")
 nCPU <- parallel::detectCores()
+doParallel::registerDoParallel(cores = nCPU)
 cat("\tAttempting paralellization with", nCPU, "cores\n")
 
 # Arguments
@@ -82,15 +85,15 @@ cat("\tThere are", length(newMuseData), "new files that can be converted to WFDB
 
 # Conversion from XML to WFDB ----
 
+# Create mini log for this run of parallel function
 fileNames <- na.omit(newMuseData)
+n <- length(fileNames)
 
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
-convertedFiles <- parallel::mclapply(
-	X = fileNames,
-	FUN = function(.x) {
-
-		fp <- fs::path(inputFolder, .x, ext = "xml")
+convertedFiles <-
+	foreach(i=1:n, .combine = 'c') %dopar% {
+		fp <- fs::path(inputFolder, fileNames[i], ext = "xml")
 
 		ecg <- shiva::read_muse(fp)
 		sig <- vec_data(ecg)
@@ -111,19 +114,17 @@ convertedFiles <- parallel::mclapply(
 		shiva::write_wfdb(
 			data = sig,
 			type = "muse",
-			record = .x,
+			record = fileNames[i],
 			record_dir = yearFolder,
 			header = hea
 		)
 
-		cat("\tWrote the file", .x, "into the", year, "folder\n")
+		vroom::vroom_write_lines(fileNames[i], wfdbLogFile, append = TRUE)
+		cat("\tWrote the file", fileNames[i], "into the", year, "folder\n")
 
 		# "Return value"
-		.x
+		fileNames[i]
 	}
-)
 
-convertedFiles <- unlist(convertedFiles) # Change into vector of characters
-vroom::vroom_write_lines(convertedFiles, wfdbLogFile, append = TRUE)
 cat("\tA total of", length(convertedFiles), "were added to the WFDB log\n")
 
