@@ -57,9 +57,7 @@ currentMuseData <- xmlNames
 
 # Update if needed
 updatedMuseData <- setdiff(currentMuseData, museLogData)
-
 readr::write_lines(updatedMuseData, file = museLogFile, append = TRUE)
-
 cat("\tAdding", length(updatedMuseData), "files to MUSE log\n")
 
 # WFDB preparation ----
@@ -71,9 +69,11 @@ if (!fs::file_exists(wfdbLogFile)) {
 	fs::file_create(wfdbLogFile)
 }
 
-# Update log as needed
+# Read overall log file
 wfdbLogData <- readr::read_lines(wfdbLogFile)
-cat("\tCurrently there are", length(wfdbLogData), "files in the WFDB log\n")
+cat("\tCurrently there are",
+		length(wfdbLogData),
+		"files in the overall WFDB log\n")
 
 # Only need to add files that are new from MUSE
 newMuseData <- setdiff(currentMuseData, wfdbLogData)
@@ -116,7 +116,6 @@ convertedFiles <- parallel::mclapply(
 			header = hea
 		)
 
-		readr::write_lines(.x, wfdbLogFile, append = TRUE)
 		cat("\tWrote the file", .x, "into the", year, "folder\n")
 
 		# "Return value"
@@ -124,5 +123,7 @@ convertedFiles <- parallel::mclapply(
 	}
 )
 
+convertedFiles <- unlist(convertedFiles) # Change into vector of characters
+vroom::vroom_write_lines(convertedFiles, wfdbLogFile, append = TRUE)
 cat("\tA total of", length(convertedFiles), "were added to the WFDB log\n")
 

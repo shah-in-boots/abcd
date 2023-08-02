@@ -23,7 +23,3 @@ echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sampl
 # Parallel conversion to be run everytime
 # Followed by updating contents of folders
 Rscript R/convert-xml2wfdb.R $sample
-
-# Afterwards, need to clean up and document files
-# Simple script that should take very little time to run
-Rscript R/config-wfdb.R
