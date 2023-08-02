@@ -92,7 +92,7 @@ n <- length(fileNames)
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
 convertedFiles <-
-	foreach(i=1:n, .combine = 'c') %dopar% {
+	foreach(i=1:n, .combine = 'c', .errorhandling = "remove") %dopar% {
 		fp <- fs::path(inputFolder, fileNames[i], ext = "xml")
 
 		ecg <- shiva::read_muse(fp)

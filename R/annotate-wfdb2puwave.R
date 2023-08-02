@@ -70,7 +70,7 @@ n <- length(fileNames)
 # Also place everything into correct "folder" by YEAR
 
 annotatedFiles <-
-	foreach(i=1:n, .combine = 'c') %dopar% {
+	foreach(i=1:n, .combine = 'c', .errorhandling = "remove") %dopar% {
 		fp <- fs::path(wfdb, fileNames[i], ext = ".dat")
 
 		shiva::detect_surface_beats(
@@ -80,7 +80,7 @@ annotatedFiles <-
 		)
 
 		vroom::vroom_write_lines(fileNames[i], annLogFile, append = TRUE)
-		cat("\tWrote the file", fileNames[i], "into the", year, "folder\n")
+		cat("\tWrote the file", fileNames[i], "into the", folderName, "folder\n")
 
 		# "Return value"
 		fileNames[i]
