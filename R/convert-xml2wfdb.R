@@ -15,11 +15,11 @@ cat("Setup for processing of XML into WFDB files:\n\n")
 # Setup parallelization
 nCPU <- parallel::detectCores()
 doParallel::registerDoParallel(cores = nCPU)
-cat("\tAttempting paralellization with", nCPU, "cores")
+cat("\tAttempting paralellization with", nCPU, "cores\n")
 
 args <- commandArgs(trailingOnly = TRUE)
 folderName <- as.character(args[1])
-cat("\tWorking in the", folderName, "folder")
+cat("\tWorking in the", folderName, "folder\n")
 
 # Libraries
 library(shiva)
@@ -84,9 +84,9 @@ cat("\tThere are", length(newMuseData), "new files that can be converted to WFDB
 
 # Conversion from XML to WFDB ----
 
-fileNames <- newMuseData
+fileNames <- na.omit(newMuseData)
 filePaths <-
-	fs::path(inputFolder, fileNames, ext = "xml")
+	fs::path(inputFolder, fileNames, ext = "xml") 
 n <- length(filePaths)
 
 # Make sure parallel is set up earlier
@@ -117,6 +117,8 @@ convertedFiles <- foreach(i = 1:n, .combine = c) %dopar% {
 		record_dir = yearFolder,
 		header = hea
 	)
+
+	readr::write_lines(fileNames[i], wfdbLogFile, append = TRUE)
 	cat("\tWrote the file", fileNames[i], "into the", year, "folder\n")
 
 	# "Return value"
@@ -124,6 +126,5 @@ convertedFiles <- foreach(i = 1:n, .combine = c) %dopar% {
 
 }
 
-readr::write_lines(convertedFiles, wfdbLogFile, append = TRUE)
 cat("\tA total of", length(convertedFiles), "were added to the WFDB log\n")
 
