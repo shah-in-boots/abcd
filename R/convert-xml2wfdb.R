@@ -35,7 +35,7 @@ inputFolder <- fs::path(home, main, "data", "muse", folderName)
 cat("Preparing MUSE data:\n\n")
 
 # Check MUSE contents first
-museLogFile <- fs::path(home, main, "data", "muse", "log.txt")
+museLogFile <- fs::path(home, main, "data", "muse", "muse.log")
 
 if (!fs::file_exists(museLogFile)) {
 	fs::file_create(museLogFile)
@@ -65,7 +65,7 @@ cat("\tAdding", length(updatedMuseData), "files to MUSE log\n")
 # WFDB preparation ----
 
 cat("\nPreparing WFDB data:\n\n")
-wfdbLogFile <- fs::path(home, main, "data", "wfdb", "log.txt")
+wfdbLogFile <- fs::path(home, main, "data", "wfdb", "wfdb.log")
 
 if (!fs::file_exists(wfdbLogFile)) {
 	fs::file_create(wfdbLogFile)
