@@ -64,7 +64,7 @@ fileNames <-
 
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
-annotations <- parallel::mclapply(
+annotations <- parallel::mcmapply(
 	X = fileNames,
 	FUN = function(.x) {
 
@@ -80,14 +80,11 @@ annotations <- parallel::mclapply(
 
 		# "Return value"
 		.x
-	}
+	},
+	mc.silent = TRUE
 )
 
-# Repeat eval of successful file conversions
-annFiles <-
-	fs::dir_ls(wfdb, glob = "*.ecgpuwave") |>
-	fs::path_file() |>
-	fs::path_ext_remove()
-vroom::vroom_write_lines(annFiles, annLogFile, append = TRUE)
-cat("\tA total of", length(annFiles), "were added to the ECGPUWAVE log\n")
+annotations <- names(annotations)
+vroom::vroom_write_lines(annotations, annLogFile, append = TRUE)
+cat("\tA total of", length(annotations), "were added to the ECGPUWAVE log\n")
 
