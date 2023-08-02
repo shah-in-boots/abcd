@@ -40,3 +40,7 @@ dx |>
 	add_overall()
 
 write_csv(dx, "./output/SpanishAfib-2023-07-31.csv")
+
+# Hatem MRN for SDOH ----
+
+
