@@ -10,23 +10,21 @@
 
 # Setup ----
 
-cat("Setup for processing of XML into WFDB files:\n\n")
-
-# Setup parallelization
-nCPU <- parallel::detectCores()
-doParallel::registerDoParallel(cores = nCPU)
-cat("\tAttempting paralellization with", nCPU, "cores\n")
-
-args <- commandArgs(trailingOnly = TRUE)
-folderName <- as.character(args[1])
-cat("\tWorking in the", folderName, "folder\n")
-
 # Libraries
 library(shiva)
 library(readr)
 library(fs)
-library(foreach)
-library(doParallel)
+library(parallel)
+
+# Setup parallelization
+cat("Setup for processing of XML into WFDB files:\n\n")
+nCPU <- parallel::detectCores()
+cat("\tAttempting paralellization with", nCPU, "cores\n")
+
+# Arguments
+args <- commandArgs(trailingOnly = TRUE)
+folderName <- as.character(args[1])
+cat("\tWorking in the", folderName, "folder\n")
 
 # Paths
 home <- fs::path_expand("~")
@@ -85,46 +83,46 @@ cat("\tThere are", length(newMuseData), "new files that can be converted to WFDB
 # Conversion from XML to WFDB ----
 
 fileNames <- na.omit(newMuseData)
-filePaths <-
-	fs::path(inputFolder, fileNames, ext = "xml") 
-n <- length(filePaths)
 
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
-convertedFiles <- foreach(i = 1:n, .combine = c) %dopar% {
+convertedFiles <- parallel::mclapply(
+	X = fileNames,
+	FUN = function(.x) {
 
-	ecg <- shiva::read_muse(filePaths[i])
+		fp <- fs::path(inputFolder, .x, ext = "xml")
 
-	sig <- vec_data(ecg)
-	hea <- attr(ecg, "header")
+		ecg <- shiva::read_muse(fp)
+		sig <- vec_data(ecg)
+		hea <- attr(ecg, "header")
 
-	# Get year
-	year <-
-		hea$start_time |>
-		clock::get_year()
+		# Get year
+		year <-
+			hea$start_time |>
+			clock::get_year()
 
-	yearFolder <- fs::path(home, main, "data", "wfdb", year)
+		yearFolder <- fs::path(home, main, "data", "wfdb", year)
 
-	# Create folder if needed
-	if (!fs::dir_exists(yearFolder)) {
-		fs::dir_create(yearFolder)
+		# Create folder if needed
+		if (!fs::dir_exists(yearFolder)) {
+			fs::dir_create(yearFolder)
+		}
+
+		shiva::write_wfdb(
+			data = sig,
+			type = "muse",
+			record = .x,
+			record_dir = yearFolder,
+			header = hea
+		)
+
+		readr::write_lines(.x, wfdbLogFile, append = TRUE)
+		cat("\tWrote the file", .x, "into the", year, "folder\n")
+
+		# "Return value"
+		.x
 	}
-
-	shiva::write_wfdb(
-		data = sig,
-		type = "muse",
-		record = fileNames[i],
-		record_dir = yearFolder,
-		header = hea
-	)
-
-	readr::write_lines(fileNames[i], wfdbLogFile, append = TRUE)
-	cat("\tWrote the file", fileNames[i], "into the", year, "folder\n")
-
-	# "Return value"
-	fileNames[i]
-
-}
+)
 
 cat("\tA total of", length(convertedFiles), "were added to the WFDB log\n")
 
