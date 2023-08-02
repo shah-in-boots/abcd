@@ -83,12 +83,11 @@ annotations <- parallel::mclapply(
 	}
 )
 
-# Repeat Ann file comparison
+# Repeat eval of successful file conversions
 annFiles <-
 	fs::dir_ls(wfdb, glob = "*.ecgpuwave") |>
 	fs::path_file() |>
 	fs::path_ext_remove()
-
 vroom::vroom_write_lines(annFiles, annLogFile, append = TRUE)
 cat("\tA total of", length(annFiles), "were added to the ECGPUWAVE log\n")
 
