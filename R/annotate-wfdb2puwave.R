@@ -11,7 +11,9 @@
 library(shiva)
 library(fs)
 library(dplyr)
+library(foreach)
 library(parallel)
+library(doParallel)
 
 # External argument (e.g. the year folder)
 args <- commandArgs(trailingOnly = TRUE)
@@ -20,7 +22,8 @@ folderName <- as.character(args[1])
 # Setup parallelization
 cat("Setup for rhythm annotation:\n\n")
 nCPU <- parallel::detectCores()
-cat("\tAttempting paralellization with", nCPU, "cores\n")
+doParallel::registerDoParallel(cores = nCPU)
+cat("\tAttempting parallelization with", nCPU, "cores\n")
 
 # Paths
 home <- fs::path_expand("~")
@@ -61,30 +64,26 @@ cat("\tThere are", length(toBeAnnotated), "new WFDB-files that can be annotated 
 fileNames <-
 	toBeAnnotated |>
 	na.omit()
+n <- length(fileNames)
 
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
-annotations <- parallel::mcmapply(
-	X = fileNames,
-	FUN = function(.x) {
 
-		fp <- fs::path(wfdb, .x, ext = ".dat")
+annotatedFiles <-
+	foreach(i=1:n, .combine = 'c') %dopar% {
+		fp <- fs::path(wfdb, fileNames[i], ext = ".dat")
 
 		shiva::detect_surface_beats(
-			record = .x,
+			record = fileNames[i],
 			record_dir = wfdb,
 			detector = "ecgpuwave"
 		)
 
-		cat("\tWrote the file", .x, "into the", folderName, "folder\n")
+		vroom::vroom_write_lines(fileNames[i], annLogFile, append = TRUE)
+		cat("\tWrote the file", fileNames[i], "into the", year, "folder\n")
 
 		# "Return value"
-		.x
-	},
-	mc.silent = TRUE
-)
+		fileNames[i]
+	}
 
-annotations <- names(annotations)
-vroom::vroom_write_lines(annotations, annLogFile, append = TRUE)
-cat("\tA total of", length(annotations), "were added to the ECGPUWAVE log\n")
-
+cat("\tA total of", length(annotatedFiles), "were added to the ECGPUWAVE log\n")

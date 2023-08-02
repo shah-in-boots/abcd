@@ -22,7 +22,7 @@ library(doParallel)
 cat("Setup for processing of XML into WFDB files:\n\n")
 nCPU <- parallel::detectCores()
 doParallel::registerDoParallel(cores = nCPU)
-cat("\tAttempting paralellization with", nCPU, "cores\n")
+cat("\tAttempting parallelization with", nCPU, "cores\n")
 
 # Arguments
 args <- commandArgs(trailingOnly = TRUE)
