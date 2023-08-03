@@ -23,7 +23,7 @@ library(doParallel)
 args <- commandArgs(trailingOnly = TRUE)
 taskNumber <- as.character(args[1]) # Example... 3rd job
 taskCount <- as.integer(args[2]) # Total array jobs will be the number of nodes
-cat("\tBatch array job number", taskNumber, "out of", taskTotal, "array jobs total\n")
+cat("\tBatch array job number", taskNumber, "out of", taskCount, "array jobs total\n")
 
 # Setup parallelization
 nCPU <- parallel::detectCores()
@@ -40,17 +40,16 @@ wfdb <- fs::path(home, main, 'data', 'wfdb')
 
 # Number of files to be split into ~ equivalent parts
 inputData <- vroom::vroom_lines(fs::path(muse, 'muse', ext = 'log'))
-inputConfig <-
-	vroom::vroom(
-		fs::path(home, main, 'config-muse', ext = 'txt'),
-		delim = '\t'
-	)
 
 # Create splits for batching
 splitData <-
 	split(inputData, cut(seq_along(inputData), taskCount, labels = FALSE))
 chunkData <- splitData[[taskNumber]]
 cat("\tWill consider", length(chunkData), "XML files in this batch\n")
+
+# Clear data and save room
+rm(splitData, inputData)
+gc()
 
 # WFDB preparation ----
 
@@ -76,12 +75,10 @@ xmlPaths <-
 	fs::dir_ls(muse, recurse = TRUE, type = "file", glob = "*.xml")
 
 filePaths <-
-	vapply(newData,
+	lapply(newData,
 				 function(.x) {
 				 	fs::path_filter(xmlPaths, regexp = .x)
-				 },
-				 USE.NAMES = FALSE,
-				 FUN.VALUE = character(1)) |>
+				 }) |>
 	fs::as_fs_path()
 
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
@@ -90,7 +87,7 @@ n <- length(fileNames)
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
 convertedFiles <-
-	foreach(i = 1:n, .combine = 'c', .errorhandling = "remove") %dopar% {
+	foreach(i = 1:n, .combine = 'c', .errorhandling = "remove") %do% {
 
 		# Read in individual files
 		fn <- fileNames[i]

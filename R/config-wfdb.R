@@ -61,7 +61,7 @@ ecgpuwaveData <-
 	na.omit() |>
 	unique()
 newData <- setdiff(ecgpuwaveData, logData)
-cat("There are", length(newData), "WFDB files that have not yet been logged\n")
+cat("There are", length(newData), "ECGPUWAVE annotation files that have not yet been logged\n")
 
 # Rewrite a new log file
 masterList <- unique(c(logData, newData))
