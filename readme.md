@@ -74,20 +74,21 @@ The R scripts will have more definitions on them about how to old.
 Pipeline for feature extraction:
 
 1.  Convert ECG full disclosure data into XML (can be done through MUSE)
-2.  Subsequently convert XML format to WFDB format for signal analysis and annotation
-3.  QRS annotation files can be created
-4.  Segmentation can be performed if in sinus rhythm (may or may not be accurate)
-5.  Can generate GEH data from 12-lead ECG with orthogonal points
-6.  Generate HRV indices off of 10-second ECG lead
-7.  Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
-8.  Generate median beats
+1.  Subsequently convert XML format to WFDB format for signal analysis and annotation
+1.  QRS annotation files can be created
+1. 	Identification of rhythm using human-labeling + machine learning
+1.  Segmentation can be performed if in sinus rhythm (may or may not be accurate) using PhysioNet toolbox
+
+Specific parameters
+1.  Can generate GEH data from 12-lead ECG with orthogonal points
+1.  Generate HRV indices off of 10-second ECG lead
+1.  Generate short-PRD values (periodic repolarization dynamics) from 10-second strip
+1.  Generate median beats
 
 These will rely primarily on WFDB-based scripts, utilizing the XML files from MUSE which are converted to DAT and HEA files and other annotation files.
 
 ### Conversion of XML to WFDB
 
-setup-xml2wfdb.R
-check-xml2wfdb.R
 convert-xml2wfdb.R
 
 ### Identification of ECG diagnoses
