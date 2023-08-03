@@ -14,12 +14,13 @@
 printf 'Load modules\n'
 module load R/4.2.1-foss-2022a
 
-# There needs to be a job for each folder in MUSE (e.g. 20)
-# Slurm IDs for each task to help tell us what is going on
-config=/shared/home/ashah282/projects/cbcd/config-muse.txt
-sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $config)
-echo "This is array task ${SLURM_ARRAY_TASK_ID}, processing ECG from the ${sample} folder"
 
-# Parallel conversion to be run everytime
-# Followed by updating contents of folders
-Rscript R/convert-xml2wfdb.R $sample
+# Divide the number of tasks based on number of array jobs available
+# These are passed on to the R script
+echo "This is array task ${SLURM_ARRAY_TASK_ID} out of ${SLURM_ARRAY_TASK_COUNT}\n"
+
+# Convert XML to WFDB
+# First argument = task number or job ID
+# Second argument = total number of tasks
+# Internal to file will split apart the chunks to process
+Rscript R/convert-xml2wfdb.R --args $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
