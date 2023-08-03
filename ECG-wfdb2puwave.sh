@@ -5,7 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2							# Number of cores per task
-#SBATCH --array=1-100									# Number of current folders in the WFDB
+#SBATCH --mem=2G
+#SBATCH --array=1-50									# Number of current folders in the WFDB
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
