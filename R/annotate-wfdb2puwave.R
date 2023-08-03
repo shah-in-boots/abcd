@@ -77,12 +77,11 @@ wfdbPaths <-
 	fs::dir_ls(wfdb, recurse = TRUE, type = "file", glob = "*.dat")
 
 filePaths <-
-	vapply(newData,
+	sapply(newData,
 				 function(.x) {
 				 	fs::path_filter(wfdbPaths, regexp = .x)
 				 },
-				 USE.NAMES = FALSE,
-				 FUN.VALUE = character(1)) |>
+				 USE.NAMES = FALSE) |>
 	fs::as_fs_path()
 
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()

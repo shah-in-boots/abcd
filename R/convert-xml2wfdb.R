@@ -75,10 +75,11 @@ xmlPaths <-
 	fs::dir_ls(muse, recurse = TRUE, type = "file", glob = "*.xml")
 
 filePaths <-
-	lapply(newData,
+	sapply(newData,
 				 function(.x) {
 				 	fs::path_filter(xmlPaths, regexp = .x)
-				 }) |>
+				 },
+				 USE.NAMES = FALSE) |>
 	fs::as_fs_path()
 
 fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
