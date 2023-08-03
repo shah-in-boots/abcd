@@ -1,0 +1,100 @@
+
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #!/usr/bin/env Rscript
+> 
+> library(Rmpi)
+[cpu-t2-dy-compute-1:7862 :0:7862] Caught signal 4 (Illegal instruction: illegal operand)
+==== backtrace (tid:   7862) ====
+ 0 0x00000000000118e0 __funlockfile()  :0
+ 1 0x0000000000005428 mpi_initialize()  ???:0
+ 2 0x0000000000100534 R_doDotCall()  :0
+ 3 0x0000000000100a7d do_dotcall()  :0
+ 4 0x000000000013cf37 bcEval()  eval.c:0
+ 5 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+ 6 0x000000000015851f R_execClosure()  eval.c:0
+ 7 0x000000000015934d Rf_applyClosure()  ???:0
+ 8 0x0000000000146f30 bcEval()  eval.c:0
+ 9 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+10 0x00000000001573d2 forcePromise()  eval.c:0
+11 0x00000000001576a8 getvar()  eval.c:0
+12 0x00000000001404bf bcEval()  eval.c:0
+13 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+14 0x00000000001573d2 forcePromise()  eval.c:0
+15 0x00000000001576a8 getvar()  eval.c:0
+16 0x00000000001404bf bcEval()  eval.c:0
+17 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+18 0x00000000001573d2 forcePromise()  eval.c:0
+19 0x00000000001576a8 getvar()  eval.c:0
+20 0x00000000001404bf bcEval()  eval.c:0
+21 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+22 0x00000000001573d2 forcePromise()  eval.c:0
+23 0x00000000001576a8 getvar()  eval.c:0
+24 0x00000000001404bf bcEval()  eval.c:0
+25 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+26 0x000000000015851f R_execClosure()  eval.c:0
+27 0x000000000015934d Rf_applyClosure()  ???:0
+28 0x0000000000146f30 bcEval()  eval.c:0
+29 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+30 0x000000000015851f R_execClosure()  eval.c:0
+31 0x000000000015934d Rf_applyClosure()  ???:0
+32 0x0000000000146f30 bcEval()  eval.c:0
+33 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+34 0x000000000015851f R_execClosure()  eval.c:0
+35 0x000000000015934d Rf_applyClosure()  ???:0
+36 0x0000000000146f30 bcEval()  eval.c:0
+37 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+38 0x000000000015851f R_execClosure()  eval.c:0
+39 0x000000000015934d Rf_applyClosure()  ???:0
+40 0x0000000000146f30 bcEval()  eval.c:0
+41 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+42 0x000000000015851f R_execClosure()  eval.c:0
+43 0x000000000015934d Rf_applyClosure()  ???:0
+44 0x0000000000146f30 bcEval()  eval.c:0
+45 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+46 0x000000000015851f R_execClosure()  eval.c:0
+47 0x000000000015934d Rf_applyClosure()  ???:0
+48 0x0000000000146f30 bcEval()  eval.c:0
+49 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+50 0x00000000001573d2 forcePromise()  eval.c:0
+51 0x00000000001576a8 getvar()  eval.c:0
+52 0x00000000001404bf bcEval()  eval.c:0
+53 0x0000000000156a60 Rf_eval.localalias()  eval.c:0
+54 0x00000000001573d2 forcePromise()  eval.c:0
+55 0x00000000001576a8 getvar()  eval.c:0
+56 0x00000000001404bf bcEval()  eval.c:0
+=================================
+
+ *** caught illegal operation ***
+address 0x2d20068d00001eb6, cause 'unknown'
+
+Traceback:
+ 1: fun(libname, pkgname)
+ 2: doTryCatch(return(expr), name, parentenv, handler)
+ 3: tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 4: tryCatchList(expr, classes, parentenv, handlers)
+ 5: tryCatch(fun(libname, pkgname), error = identity)
+ 6: runHook(".onLoad", env, package.lib, package)
+ 7: loadNamespace(package, lib.loc)
+ 8: doTryCatch(return(expr), name, parentenv, handler)
+ 9: tryCatchOne(expr, names, parentenv, handlers[[1L]])
+10: tryCatchList(expr, classes, parentenv, handlers)
+11: tryCatch({    attr(package, "LibPath") <- which.lib.loc    ns <- loadNamespace(package, lib.loc)    env <- attachNamespace(ns, pos = pos, deps, exclude, include.only)}, error = function(e) {    P <- if (!is.null(cc <- conditionCall(e)))         paste(" in", deparse(cc)[1L])    else ""    msg <- gettextf("package or namespace load failed for %s%s:\n %s",         sQuote(package), P, conditionMessage(e))    if (logical.return && !quietly)         message(paste("Error:", msg), domain = NA)    else stop(msg, call. = FALSE, domain = NA)})
+12: library(Rmpi)
+An irrecoverable exception occurred. R is aborting now ...
