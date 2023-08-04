@@ -18,6 +18,10 @@ home <- fs::path_expand("~")
 main <- fs::path("projects", "cbcd")
 wfdb <- fs::path(home, main, "data", "wfdb")
 
+# Setup parallelization
+nCPU <- parallel::detectCores()
+doParallel::registerDoParallel(cores = nCPU)
+cat("\tAttempt parallelization with", nCPU, "cores\n")
 
 # Create MRN list in WFDB folder
 mrnFile <- fs::path(wfdb, 'mrn', ext = 'log')
@@ -26,26 +30,27 @@ if (!fs::file_exists(mrnFile)) {
 	readr::write_lines("MRN\tMUSE_ID", file = mrnFile)
 }
 
-n <- length(chunkData)
-foreach (i = 1:n, .combine = 'c', .errorhandling = 'remove') {
+# All files in each folder
+mrnList <-
+	fs::dir_ls(wfdb, recurse = 1, type = "file", glob = "*.hea") |>
+	na.omit() |>
+	unique()
+n <- length(mrnList)
 
-	header <- vroom::vroom_lines(chunkData[i])
+out <- foreach(i = 1:n, .combine = 'rbind', .errorhandling = 'remove') %dopar% {
 
+	header <- vroom::vroom_lines(mrnList[i])
 	mrn <-
 		grep("\\bmrn\\b", header, ignore.case = TRUE, value = TRUE) |>
 		gsub("\\D", "", x = _) |>
 		as.integer()
 
 	fn <-
-		fs::path_file(chunkData[i]) |>
+		fs::path_file(mrnList[i]) |>
 		fs::path_ext_remove()
 
-	readr::write_lines(x = paste0(mrn, "\t", fn),
-										 file = mrnFile,
-										 append = TRUE)
-
-	fn
-
+	# Return for binding)
+	cbind(MRN = mrn, MUSE_ID = fn)
 }
 
 cat("\tCompleted writing", n, "MRN and MUSE_IDs to file\n")
