@@ -16,5 +16,5 @@ key <-
 
 genes <-
 	wes |>
-	select(study_id, contains("gene")) |>
+	select(study_id, gene_name, gene_sequence, gene_acmg) |>
 	filter(!is.na(gene_name))
