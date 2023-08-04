@@ -36,28 +36,28 @@ mrnList <-
 n <- length(mrnList)
 
 cat("Expect to write out", n, "files\n")
-out <- foreach(i = 1:n, .combine = 'rbind', .errorhandling = 'remove') %dopar% {
+out <-
+	foreach(i = 1:n,
+					.combine = 'c',
+					.errorhandling = "remove") %dopar% {
 
-	header <- vroom::vroom_lines(mrnList[i])
-	mrn <-
-		grep("\\bmrn\\b", header, ignore.case = TRUE, value = TRUE) |>
-		gsub("\\D", "", x = _) |>
-		as.integer()
+		header <- vroom::vroom_lines(mrnList[i])
+		mrn <-
+			grep("\\bmrn\\b", header, ignore.case = TRUE, value = TRUE) |>
+			gsub("\\D", "", x = _) |>
+			as.integer()
 
-	fn <-
-		fs::path_file(mrnList[i]) |>
-		fs::path_ext_remove()
+		fn <-
+			fs::path_file(mrnList[i]) |>
+			fs::path_ext_remove()
 
-	cat("\tWill write... MRN =", mrn, "and MUSE_ID =", fn, "\n")
+		as.data.frame(cbind(MRN = mrn, MUSE_ID = fn)) |>
+			vroom::vroom_write(file = mrnFile, append = TRUE)
 
-	# Return for binding)
-	cbind(MRN = mrn, MUSE_ID = fn)
-}
+		cat("\tWill write... MRN =", mrn, "and MUSE_ID =", fn, "\n")
 
-# Write out files
-out |>
-	as.data.frame() |>
-	dplyr::distinct() |>
-	vroom::vroom_write(file = mrnFile, append = TRUE)
+		# Return for binding
+		fn
+	}
 
 cat("\tCompleted writing", n, "MRN and MUSE_IDs to file\n")
