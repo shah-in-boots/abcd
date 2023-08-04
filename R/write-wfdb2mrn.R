@@ -7,7 +7,6 @@
 cat("Plan for Writing MRNs from WFDB Files:\n\n")
 
 # Libraries
-library(shiva)
 library(fs)
 library(dplyr)
 library(vroom)
@@ -37,12 +36,12 @@ foreach (i = 1:n, .combine = 'c', .errorhandling = 'remove') {
 		gsub("\\D", "", x = _) |>
 		as.integer()
 
-	fn <- 
+	fn <-
 		fs::path_file(chunkData[i]) |>
 		fs::path_ext_remove()
 
-	readr::write_lines(x = paste0(mrn, "\t", fn), 
-										 file = mrnFile, 
+	readr::write_lines(x = paste0(mrn, "\t", fn),
+										 file = mrnFile,
 										 append = TRUE)
 
 	fn
