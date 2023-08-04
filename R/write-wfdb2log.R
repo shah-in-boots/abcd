@@ -66,6 +66,7 @@ out <-
 # Write out the file
 out |>
 	as.data.frame() |>
+	dplyr::distinct() |>
 	vroom::vroom_write(
 		file = mrnFile,
 		delim = ",",
