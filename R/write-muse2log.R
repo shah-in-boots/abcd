@@ -25,42 +25,36 @@ nCPU <- parallel::detectCores()
 doParallel::registerDoParallel(cores = nCPU)
 cat("Attempt parallelization with", nCPU, "cores\n")
 
-# Create MRN list in WFDB folder
-mrnFile <- fs::path(muse, 'mrn', ext = 'log')
+# Create log file
+logFile <- fs::path(muse, 'muse', ext = 'log')
 
 # All files in each folder
-mrnList <-
-	fs::dir_ls(muse, recurse = 1, type = "file", glob = "*.hea") |>
+museList <-
+	fs::dir_ls(muse, recurse = 1, type = "file", glob = "*.xml") |>
 	na.omit() |>
 	unique()
-n <- length(mrnList)
+n <- length(museList)
 
 cat("Expect to write out", n, "files\n")
 out <-
 	foreach(i = 1:n,
 					.combine = 'rbind',
 					.errorhandling = "remove") %dopar% {
-						header <- vroom::vroom_lines(mrnList[i])
-						mrn <-
-							grep("\\bmrn\\b",
-									 header,
-									 ignore.case = TRUE,
-									 value = TRUE) |>
-							gsub("\\D", "", x = _) |>
-							as.integer()
+						xml <- fs::as_fs_path(museList[i])
 
 						fn <-
-							fs::path_file(mrnList[i]) |>
+							fs::path_file(xml) |>
 							fs::path_ext_remove()
 
 						fp <-
-							fs::path_ext_remove(mrnList[i]) |>
+							fs::path_ext_remove(xml) |>
 							fs::path_rel(path = _, start = fs::path(home, main))
 
-						cat("\tWill write... MRN =", mrn, "and MUSE_ID =", fn, "\n")
+
+						cat("\tWill write MUSE_ID =", fn, "\n")
 
 						# Return for binding
-						cbind(MRN = mrn, MUSE_ID = fn, PATH = fp)
+						cbind(MUSE_ID = fn, PATH = fp)
 					}
 
 # Write out the file
@@ -68,10 +62,10 @@ out |>
 	as.data.frame() |>
 	dplyr::distinct() |>
 	vroom::vroom_write(
-		file = mrnFile,
+		file = logFile,
 		delim = ",",
 		col_names = TRUE,
 		append = FALSE
 	)
 
-cat("\tCompleted writing", n, "MRN and MUSE_IDs to file\n")
+cat("\tCompleted writing", n, "MUSE_IDs and paths to log file\n")
