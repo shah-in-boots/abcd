@@ -1,8 +1,7 @@
 #!/usr/bin/env Rscript
 
-# `write-muse2log` writes a table log of the MUSE data with paths included
-# Creates a table with three columns
-# 	MRN <integer>
+# `write-muse2log` writes a table log of the MUSE data with paths 
+# Creates a table with two columns
 # 	MUSE_ID <character>
 # 	PATH <character> - defined by cluster location
 
