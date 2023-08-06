@@ -3,17 +3,22 @@
 # `match-wfdb2mrn` takes a list of MRNs and finds WFDB files that match
 # Arguments:
 # 	FILE PATH <character>
-# 		Relative path name (e.g. sandbox/mrnList.txt) from ROOT folder
-# 		List of MRNs -> will convert to integer 
-#   	One MRN per row of text as how it will be read in
-#   	No header or column names in this file
-# 	FOLDER NAME <character> 
+# 		Relative path name (e.g. sandbox/mrnList.csv) from ROOT folder
+# 		This will be read in as a CSV file preferentially
+# 		Requires there be a column named "mrn" (lower case) to select from
+# 	FOLDER NAME <character>
 # 		Folder to place findings in
 # 		Will be created if needed
+# 		Assumed to be in the WFDB folder
+# 	SLURM_ARRAY_JOB_ID <integer>
+# 		Task Number to pass forward for batching
+#		SLURM_ARRAY_TASK_COUNT <integer>
+#			Total number of tasks to help with batching
+#			Needed to help divide number of jobs
 
 # Setup ----
 
-cat("Setup for MRN Search Amongst the WFDB Files:\n\n")
+cat("Setup for MRN Search Amongst the WFDB Files!")
 
 # Libraries
 library(vroom)
@@ -24,91 +29,92 @@ library(dplyr)
 # 	1st = FILE of MRNs as FULL PATH
 #		2nd = NAME of FOLDER
 args <- commandArgs(trailingOnly = TRUE)
-mrnFile <- as.character(args[1]) 
-folderName <- as.character(args[2]) 
-cat("\tFile name is:" mrnFile, "\n")
+mrnFile <- as.character(args[1]) # File holding Mrns
+folderName <- as.character(args[2]) # output folder
+taskNumber <- as.character(args[3]) # Task number or ID from slurm
+taskCount <- as.integer(args[4]) # Total array jobs will be the number of nodes
+cat("\tFile name is:", mrnFile, "\n")
 cat("\tWill write to folder:", folderName, "\n")
+cat("\tBatch array job number:", taskNumber, "\n")
+cat("\tTotal number of array jobs:", taskCount, "\n")
 
 # Paths
 home <- fs::path_expand('~')
 main <- fs::path('projects', 'cbcd')
 wfdb <- fs::path(home, main, 'data', 'wfdb')
 
-# MRN preparation ----
+# I/O ----
 
-cat("\nReading in MRNs:\n\n")
-mrnPath <- fs::path(home, main, mrnFile)
-mrnData <- vroom::read_lines(mrnPath, col_types = "i")
+# MRN data
+cat("\nPreparing input and output data:\n\n")
+mrnData <-
+	fs::path(home, main, mrnFile) |>
+	vroom::vroom() |>
+	dplyr::select(mrn) |>
+	dplyr::distinct() |>
+	janitor::clean_names()
+cat("\tThere are", nrow(mrnData), "MRNs to evaluate\n")
 
-# Need to know which files have already been processed
-logFile <- fs::path(wfdb, 'wfdb', ext = 'log')
-if (!fs::file_exists(logFile)) {
-	fs::file_create(logFile)
+# Output folder
+outputFolder <- fs::path(wfdb, folderName)
+if (!fs::dir_exists(outputFolder)) {
+	fs::dir_create(outputFolder)
 }
-logData <- vroom::vroom_lines(logFile)
-cat("\tCurrently there are", length(logData), "files in the overall WFDB log\n")
+cat("\tOutput location:", outputFolder, "\n")
 
-# Only need to add files that are new from MUSE
-newData <- setdiff(chunkData, logData)
+# Batch Preparation ----
 
-cat("\tThere are", length(newData), "new files that can be converted to WFDB format\n")
+cat("\nBatch preparation:\n\n")
+# Number of files to be split into ~ equivalent parts
+logFile <- fs::path(wfdb, 'wfdb', ext = 'log')
+l <-
+	system2(command = 'wc',
+					args = paste('-l', logFile),
+					stdout = TRUE) |>
+	readr::parse_number() |>
+	{\(.x) .x - 1 }() # Subtract off header
+lineNumbers <- 1:l
+cat("\tNumber of lines in log:", l, "\n")
 
-# Conversion from XML to WFDB ----
+# Create splits of the line numbers
+lineSplits <-
+	split(lineNumbers, cut(seq_along(lineNumbers), taskCount, labels = FALSE))
+chunk <- lineSplits[[taskNumber]]
+cat("\tNumber of lines to read in in this batch:", length(chunk), "\n")
 
-# Need a list of all paths to evaluate
-xmlPaths <-
-	fs::dir_ls(muse, recurse = TRUE, type = "file", glob = "*.xml")
+# Reading in the data
+# This is just a subset to reduce file size
+logData <-
+	vroom::vroom(
+		file = logFile,
+		col_names = c("MRN", "MUSE_ID", "PATH"),
+		skip = min(chunk, na.rm = TRUE),
+		n_max = length(chunk)
+	) |>
+	janitor::clean_names()
 
-filePaths <-
-	sapply(newData,
-				 function(.x) {
-				 	fs::path_filter(xmlPaths, regexp = .x)
-				 },
-				 USE.NAMES = FALSE) |>
-	fs::as_fs_path()
+cat("\tJust read in", length(chunk), "lines of data from the log\n")
 
-fileNames <- fs::path_file(filePaths) |> fs::path_ext_remove()
-n <- length(fileNames)
+# Match WFDB Files ----
 
-# Make sure parallel is set up earlier
-# Also place everything into correct "folder" by YEAR
-convertedFiles <-
-	foreach(i = 1:n, .combine = 'c', .errorhandling = "remove") %do% {
+cat("\nCopy files over to new folder:\n\n")
 
-		# Read in individual files
-		fn <- fileNames[i]
-		fp <- filePaths[i]
+# Filter down log table to relevant MRNs
+batchData <- inner_join(mrnData, logData, by = "mrn")
+apply(X = batchData, MARGIN = 1, FUN = function(.x) {
 
-		ecg <- shiva::read_muse(fp)
-		sig <- vec_data(ecg)
-		hea <- attr(ecg, "header")
+	fn <- as.character(.x[2])
 
-		# Get year
-		year <-
-			hea$start_time |>
-			clock::get_year()
+	fp <-
+		fs::path(home, main, .x[3]) |>
+		fs::path_dir()
 
-		yearFolder <- fs::path(wfdb, year)
+	files <- fs::dir_ls(fp, regexp = fn)
 
-		# Create folder if needed
-		if (!fs::dir_exists(yearFolder)) {
-			fs::dir_create(yearFolder)
-		}
+	fs::file_copy(path = files, new_path = outputFolder, overwrite = TRUE)
 
-		shiva::write_wfdb(
-			data = sig,
-			type = "muse",
-			record = fn,
-			record_dir = yearFolder,
-			header = hea
-		)
-
-		vroom::vroom_write_lines(fn, file = logFile, append = TRUE)
-		cat("\tWrote the file", fn, "into the", year, "folder\n")
-
-		# Return foreach to combine into vector
-		fn
+	if (length(files) >= 1) {
+		cat("\tCopying:", fn, "\n")
 	}
 
-cat("\tA total of", length(convertedFiles), "were added to the WFDB log\n")
-
+})

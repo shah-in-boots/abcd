@@ -26,21 +26,21 @@ doParallel::registerDoParallel(cores = nCPU)
 cat("Attempt parallelization with", nCPU, "cores\n")
 
 # Create MRN list in WFDB folder
-mrnFile <- fs::path(wfdb, 'mrn', ext = 'log')
+logFile <- fs::path(wfdb, 'wfdb', ext = 'log')
 
 # All files in each folder
-mrnList <-
+dataList <-
 	fs::dir_ls(wfdb, recurse = 1, type = "file", glob = "*.hea") |>
 	na.omit() |>
 	unique()
-n <- length(mrnList)
+n <- length(dataList)
 
 cat("Expect to write out", n, "files\n")
 out <-
 	foreach(i = 1:n,
 					.combine = 'rbind',
 					.errorhandling = "remove") %dopar% {
-						header <- vroom::vroom_lines(mrnList[i])
+						header <- vroom::vroom_lines(dataList[i])
 						mrn <-
 							grep("\\bmrn\\b",
 									 header,
@@ -50,11 +50,11 @@ out <-
 							as.integer()
 
 						fn <-
-							fs::path_file(mrnList[i]) |>
+							fs::path_file(dataList[i]) |>
 							fs::path_ext_remove()
 
 						fp <-
-							fs::path_ext_remove(mrnList[i]) |>
+							fs::path_ext_remove(dataList[i]) |>
 							fs::path_rel(path = _, start = fs::path(home, main))
 
 						cat("\tWill write... MRN =", mrn, "and MUSE_ID =", fn, "\n")
@@ -68,7 +68,7 @@ out |>
 	as.data.frame() |>
 	dplyr::distinct() |>
 	vroom::vroom_write(
-		file = mrnFile,
+		file = logFile,
 		delim = ",",
 		col_names = TRUE,
 		append = FALSE
