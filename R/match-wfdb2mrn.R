@@ -24,6 +24,8 @@ cat("Setup for MRN Search Amongst the WFDB Files!")
 library(vroom)
 library(fs)
 library(dplyr)
+library(parallel)
+library(foreach)
 
 # Arguments
 # 	1st = FILE of MRNs as FULL PATH
@@ -42,6 +44,11 @@ cat("\tTotal number of array jobs:", taskCount, "\n")
 home <- fs::path_expand('~')
 main <- fs::path('projects', 'cbcd')
 wfdb <- fs::path(home, main, 'data', 'wfdb')
+
+# Setup parallelization
+nCPU <- parallel::detectCores()
+doParallel::registerDoParallel(cores = nCPU)
+cat("Attempt parallelization with", nCPU, "cores\n")
 
 # I/O ----
 
@@ -93,7 +100,7 @@ logData <-
 	) |>
 	janitor::clean_names()
 
-cat("\tJust read in", length(chunk), "lines of data from the log\n")
+cat("\tJust read in", nrow(logData), "lines of data from the log\n")
 
 # Match WFDB Files ----
 
@@ -101,12 +108,15 @@ cat("\nCopy files over to new folder:\n\n")
 
 # Filter down log table to relevant MRNs
 batchData <- inner_join(mrnData, logData, by = "mrn")
-apply(X = batchData, MARGIN = 1, FUN = function(.x) {
+n <- nrow(batchData)
+cat("\tExpect to move over", n, "files\n")
 
-	fn <- as.character(.x[2])
+foreach(i = 1:n, .combine = 'c', .errorhandling = 'remove') %dopar% {
+
+	fn <- as.character(batchData[i, 3])
 
 	fp <-
-		fs::path(home, main, .x[3]) |>
+		fs::path(home, main, batchData[i, 3]) |>
 		fs::path_dir()
 
 	files <- fs::dir_ls(fp, regexp = fn)
@@ -117,4 +127,5 @@ apply(X = batchData, MARGIN = 1, FUN = function(.x) {
 		cat("\tCopying:", fn, "\n")
 	}
 
-})
+}
+
