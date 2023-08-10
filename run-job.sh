@@ -9,5 +9,5 @@
 #SBATCH --output=slurm-%J.out
 
 module load R/4.2.1-foss-2022a
-Rscript R/find-mrnByWfdbDx.R 1 100
+Rscript R/find-mrnByWfdbDx.R afib-regex.txt afib-mrn.txt 1 100
 
