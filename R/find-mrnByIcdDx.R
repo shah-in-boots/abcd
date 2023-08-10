@@ -135,5 +135,5 @@ mrn <-
 	redcap[which(ids %in% redcap$record_id), ] |>
 	dplyr::pull(mrn)
 
-vroom::vroom_write_lines(mrn, file = outputFile)
+vroom::vroom_write_lines(mrn, file = outputFile, append = TRUE)
 cat("Total number of MRNs =", length(mrn), "!")
