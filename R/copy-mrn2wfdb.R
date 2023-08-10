@@ -1,6 +1,9 @@
 #!/usr/bin/env Rscript
 
-# `match-wfdb2mrn` takes a list of MRNs and finds WFDB files that match
+# `copy-mrn2wfdb` takes a list of MRNs and copies WFDB files that match
+# Output:
+# 	Creates a folder named by the ARG of WFDB files
+# 	Will obtain all WFDB data, header, and annotations files
 # Arguments:
 # 	FILE PATH <character>
 # 		Relative path name (e.g. sandbox/mrnList.csv) from ROOT folder
