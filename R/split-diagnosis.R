@@ -14,7 +14,7 @@ library(fs)
 # Input paths
 home <- fs::path_expand('~')
 main <- fs::path('projects', 'cbcd')
-fileName <- 'diagnosis'
+fileName <- 'diagnosis-proc'
 
 dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
