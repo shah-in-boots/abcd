@@ -51,7 +51,7 @@ cat('Attempt parallelization with', nCPU, 'cores\n')
 cat('\nHandling the inputs & outputs:\n')
 inputFile <- fs::path(ccts, 'raw', 'diagnosis-raw', ext = 'csv')
 cat('\tWill split up the file named...', inputFile, '\n')
-outputFile <- fs::path(ccts, 'raw', paste0('diagnosis-proc-', taskCount), ext = 'csv')
+outputFile <- fs::path(ccts, 'raw', paste0('diagnosis-proc-', taskNumber), ext = 'csv')
 cat('\tWill then write to...', outputFile, '\n')
 
 # Get lines and line numbers to help with batching

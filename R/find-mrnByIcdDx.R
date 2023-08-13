@@ -133,7 +133,8 @@ redcap <-
 # Filter to relevant data
 mrn <-
 	redcap[which(ids %in% redcap$record_id), ] |>
-	dplyr::pull(mrn)
+	dplyr::pull(mrn) |>
+	as.character()
 
 vroom::vroom_write_lines(mrn, file = outputFile, append = TRUE)
 cat("Total number of MRNs =", length(mrn), "!")
