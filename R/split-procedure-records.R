@@ -14,7 +14,7 @@ library(vroom)
 # Input paths
 home <- fs::path_expand('~')
 main <- fs::path('projects', 'cbcd')
-fileName <- 'procedure-reports'
+fileName <- 'procedure-records'
 
 dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
@@ -24,9 +24,9 @@ dat <-
 		col_select = c(
 			record_id = 'RECORD_ID',
 			encounter_id = 'ENCOUNTER_ID',
-			procedure_name = 'PROCEDURE_NAME',
-			procedure_report = 'PROCEDURE_REPORT',
-			procedure_date = 'PROCEDURE_DATE'
+			procedure_date = 'START_DATE'
+			procedure_code = 'PROCEDURE_CODE',
+			coding_system = 'CODING_SYSTEM'
 		)
 	) |>
 	dplyr::mutate(date = as.Date(procedure_date)) |>
