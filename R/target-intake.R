@@ -6,7 +6,7 @@ read_clinical_afib_data <- function(folderName = fs::path()) {
 	labs <- vroom::vroom(fs::path(folderName, 'labs', ext = 'csv'))
 	vitals <- vroom::vroom(fs::path(folderName, 'vitals', ext = 'csv'))
 	visits <- vroom::vroom(fs::path(folderName, 'visits', ext = 'csv'))
-	medications <- vroom::vroom(fs::path(folderName, 'medications', ext = 'csv'))
+	medications <- vroom::vroom(fs::path(folderName, 'medications', ext = 'sv'))
 	procedures <- vroom::vroom(fs::path(folderName, 'procedures', ext = 'csv'))
 
 	procedures |>
