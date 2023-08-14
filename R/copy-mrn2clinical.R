@@ -139,4 +139,15 @@ vroom::vroom(inputProcedures) |>
 		append = TRUE
 	)
 
+cat('\tAnalyzing medications\n')
+
+vroom::vroom(inputMedications) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'medications.csv'),
+		delim = ',',
+		append = TRUE
+	)
+
+
 cat('\nDone with writing out files!')
