@@ -13,6 +13,7 @@
 # 	FOLDER <character>
 # 		Folder name to evaluate
 # 		In this case, all the CCTS is split into folders by year
+# 		Expected to be within data/ccts/*
 #
 # Output [1]:
 # 	DATA <csv>
