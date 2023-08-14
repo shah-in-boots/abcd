@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=procedure-reports
-#SBATCH --nodes=14
+#SBATCH --job-name=procedure-records
+#SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
 #SBATCH --array=1-14
@@ -19,6 +19,6 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
-# Remember to update partition if using large files (e.g. procedure-reports)
-printf "Splitting procedure-reports for: $year"
-Rscript R/split-procedure-reports.R $year
+# Remember to update partition if using large files (e.g. procedure-records)
+printf "Splitting procedure-records for: $year"
+Rscript R/split-procedure-records.R $year

@@ -24,7 +24,7 @@ dat <-
 		col_select = c(
 			record_id = 'RECORD_ID',
 			encounter_id = 'ENCOUNTER_ID',
-			procedure_date = 'START_DATE'
+			procedure_date = 'START_DATE',
 			procedure_code = 'PROCEDURE_CODE',
 			coding_system = 'CODING_SYSTEM'
 		)
