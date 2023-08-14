@@ -10,16 +10,15 @@
 # 	OUTPUT <folder>
 # 		Name of path and folder name to put findings
 #			Makes a subset of data from the giant initial datasestm
-# 	SLURM_ARRAY_JOB_ID <integer>
-# 		Task Number to pass forward for batching
-#		SLURM_ARRAY_TASK_COUNT <integer>
-#			Total number of tasks to help with batching
-#			Needed to help divide number of jobs
+# 	FOLDER <character>
+# 		Folder name to evaluate
+# 		In this case, all the CCTS is split into folders by year
 #
 # Output [1]:
 # 	DATA <csv>
 # 		Creates a subset of data from the clinical datasets
-#
+# 		This will ONLY APPEND to files by name in that folder
+# 		This ensure happy for loops and no data erasures
 
 # Setup ----
 
@@ -33,6 +32,7 @@ library(tibble)
 library(vroom)
 library(parallel)
 library(foreach)
+library(stringr)
 
 # Paths
 home <- fs::path_expand('~')
@@ -41,14 +41,12 @@ ccts <- fs::path(home, main, 'data', 'ccts')
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
-icdArg <- as.character(args[1])
+mrnArg <- as.character(args[1])
 outputArg <- as.character(args[2])
-taskNumber <- as.integer(args[3]) # Task number or ID from slurm
-taskCount <- as.integer(args[4]) # Total array jobs will be the number of nodes
-cat('\tICD code file name is:', icdArg, '\n')
-cat('\tWill write to file:', outputArg, '\n')
-cat('\tBatch array job number:', taskNumber, '\n')
-cat('\tTotal number of array jobs:', taskCount, '\n')
+folderName <- as.character(args[3])
+cat('\tName of MRN file:', mrnArg, '\n')
+cat('\tWill write to folder:', outputArg, '\n')
+cat('\tReading in from folder:', folderName, '\n')
 
 # Parallel...
 nCPU <- parallel::detectCores()
@@ -59,76 +57,85 @@ cat('Attempt parallelization with', nCPU, 'cores\n')
 
 cat('\nHandling the inputs & outputs:\n')
 
-# ICD codes
-icdCodes <- readr::read_lines(fs::path(home, main, icdArg))
-cat('\tHave', length(icdCodes), 'ICD codes to evaluate\n')
+# MRNs
+mrnFile <- fs::path(home, main, mrnArg)
+mrnData <- vroom::vroom_lines(mrnFile)
+cat('\tThere are', length(mrnData), 'MRNs to be evaluated\n')
 
-# Input file is the diagnosis file of interest
-inputFile <- fs::path(ccts, 'raw', 'diagnosis-proc', ext = 'csv')
+# Input file is in the batch folder
+inputDiagnosis <- fs::path(ccts, folderName, 'diagnosis', ext = 'csv')
+inputMedications <- fs::path(ccts, folderName, 'medications', ext = 'csv')
+inputVitals <- fs::path(ccts, folderName, 'vitals', ext = 'csv')
+inputVisits <- fs::path(ccts, folderName, 'visits', ext = 'csv')
+inputLabs <- fs::path(ccts, folderName, 'labs', ext = 'csv')
+inputProcedures <- fs::path(ccts, folderName, 'procedure-records', ext = 'csv')
+
+# Get record IDs to help match on key
+redcap <-
+	fs::path(ccts, 'raw', 'redcap-ids', ext = 'csv') |>
+	vroom::vroom() |>
+	dplyr::mutate(mrn = stringr::str_pad(mrn, width = 9, pad = '0'))
+
+key <- redcap$record_id[which(redcap$mrn %in% mrnData)]
+cat('\tThere are a total of', length(key), 'MRNs in the CCTS data\n')
 
 # Output file
-outputFile <- fs::path(home, main, outputArg)
-if (!fs::file_exists(outputFile)) {
-	fs::file_create(outputFile)
-	cat('\tCreating output file at...', outputFile, '\n')
-} else {
-	cat('\tWill append to output file at...', outputFile, '\n')
-}
+outputFolder <- fs::path(home, main, outputArg)
+cat('\tWill copy filtered data to folder...', outputFolder, '\n')
 
-# Batch Prep ----
+# Move to next component
+cat('\nNow will go through individual data types by individual files\n\n')
 
-cat('\nBatch preparation:\n')
+# Write Out Files ----
 
-# Get lines and line numbers to help with batching
-l <-
-	system2(command = 'wc',
-					args = paste('-l', inputFile),
-					stdout = TRUE) |>
-	readr::parse_number() |>
-	{\(.x) .x - 1 }() # Subtract off header
-lineNumbers <- 1:l
-cat('\tNumber of lines to read in this file is', l, '\n')
+cat('\tAnalyzing diagnosis\n')
 
-# Now only read in a portion based on batching
-lineSplits <-
-	split(lineNumbers, cut(seq_along(lineNumbers), taskCount, labels = FALSE))
-chunk <- lineSplits[[taskNumber]]
-cat("\tNumber of lines to read in in this batch is", length(chunk), "\n")
-
-# Diagnosis ----
-
-cat("\nNow time to search through data chunks:\n")
-outputData <-
-	vroom::vroom(
-		file = inputFile,
+vroom::vroom(inputDiagnosis) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'diagnosis.csv'),
 		delim = ',',
-		col_names = c('record_id', 'encounter_id', 'date', 'icd_code'),
-		skip = min(chunk, na.rm = TRUE),
-		n_max = length(chunk)
+		append = TRUE
 	)
 
-n <- length(outputData)
-cat("\tFound out will be analyzing", n, "rows\n")
-ids <- foreach(i = 1:n, .combine = 'c', .errorhandling = 'remove') %dopar% {
+cat('\tAnalyzing labs\n')
 
-	# Flip through ICD diagnoses
-	outputData |>
-		dplyr::filter(stringr::str_detect(icdCodes[i], icd_code)) |>
-		dplyr::pull(record_id)
+vroom::vroom(inputLabs) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'labs.csv'),
+		delim = ',',
+		append = TRUE
+	)
 
-}
-cat("\tDiscovered", length(ids), "possible MRNs\n")
+cat('\tAnalyzing visits\n')
 
-# Get MRNs from IDS
-redcap <-
-	fs::path(ccts, 'raw', 'redcap-ids.csv') |>
-	vroom::vroom()
+vroom::vroom(inputVisits) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'visits.csv'),
+		delim = ',',
+		append = TRUE
+	)
 
-# Filter to relevant data
-mrn <-
-	redcap[which(ids %in% redcap$record_id), ] |>
-	dplyr::pull(mrn) |>
-	as.character()
+cat('\tAnalyzing vitals\n')
 
-vroom::vroom_write_lines(mrn, file = outputFile, append = TRUE)
-cat("Total number of MRNs =", length(mrn), "!")
+vroom::vroom(inputVitals) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'vitals.csv'),
+		delim = ',',
+		append = TRUE
+	)
+
+cat('\tAnalyzing procedures\n')
+
+vroom::vroom(inputProcedures) |>
+	dplyr::filter(record_id %in% key) |>
+	vroom::vroom_write(
+		file = fs::path(outputFolder, 'procedures.csv'),
+		delim = ',',
+		append = TRUE
+	)
+
+cat('\nDone with writing out files!')
