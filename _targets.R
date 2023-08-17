@@ -15,7 +15,7 @@ tar_option_set(
     # Modeling,
     'tidymodels'
     ), # packages that your targets need to run
-  format = 'rds' # default storage format
+  format = 'qs' # default storage format
   # Set other options as needed.
 )
 
@@ -34,10 +34,10 @@ list(
   # Setup
   tar_target(data_loc, fs::path(here::here(), 'data')),
 
-  # SDOH ----
+  # AFIB ----
   tar_target(
-    clinical_afib_data,
-    read_clinical_afib_data(folderName = fs::path(data_loc, 'ccts', 'sdoh'))
+    afib_medications,
+    read_in_afib_medications(folderName = fs::path(data_loc, 'ccts', 'afib'))
   )
 
   # WES ----
