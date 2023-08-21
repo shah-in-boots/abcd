@@ -1,7 +1,8 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+afib_data_loc|stem|4ab80af92f4622ea|070c950c3f56ed19|624ab7877af3b331|-183515948||t19590.0617171152s|6750e7a20a1b121a|109|qs|local|vector|||0.001||
 convert_ecg_to_cvs|function|0b3b0f4d0e9155a1|||||||||||||||
 convert_ecg_to_header|function|2f335245144be706|||||||||||||||
-data_loc|stem|c292688493af3dbb|7c972985faae8f07|c3b5fc02cdc369c1|1827491257||t19585.7304943097s|bf160f080fbf1dbb|99|qs|local|vector|||1.002||
+data_loc|stem|c292688493af3dbb|7c972985faae8f07|c3b5fc02cdc369c1|1827491257||t19590.0612165964s|bf160f080fbf1dbb|99|qs|local|vector|||2.416||
 ecg_files|stem|13654152accce27f|f028a8388cca568a|091dccadfecd9440|-880297501||t19492.9045863401s|bf1a1ce7cd804ab5|251|rds|local|vector|||0.002||
 ecg_xml_files|pattern|6728f8108b91c83a|1751b100d8ffa7b2||-1968490200||||818820|file|local|vector||ecg_xml_files_c999a5b6*ecg_xml_files_d17d971d*ecg_xml_files_0f6a1417*ecg_xml_files_429bb313*ecg_xml_files_aa2d25de*ecg_xml_files_ca55000a|0.002||
 ecg_xml_files_0ca7b70d|branch|59f86778657705ef|1751b100d8ffa7b2|ad6fb326c484b385|151536276|/Users/asshah4/OneDrive - University of Illinois at Chicago/data/signals/muse/MUSE_20230515_104203_56000.xml|t19492.7178472222s|188d593b106cfc5c|146400|file|local|vector|ecg_xml_files||0||
@@ -20,3 +21,4 @@ ecg_xml_files_files|stem|860cc107454658cf|e0e073b5859a772e|091dccadfecd9440|-124
 find_data_folder|function|2b2c2ac06592bd2b|||||||||||||||
 find_ecg_files|function|0f8a593768cfc965|||||||||||||||
 read_clinical_afib_data|function|6dfb21485c3453f0|||||||||||||||
+read_in_afib_medications|function|20e9fb5c6bedadab|||||||||||||||

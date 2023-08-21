@@ -10,6 +10,8 @@ tar_option_set(
     'shiva', 'volundr',
     # Specific data type handling
     'data.table', 'xml2',
+    # Content specific (e.g. clinical)
+    'icd',
     # Wrangling
     'tibble', 'tidyverse', 'here', 'fs', 'vroom',
     # Modeling,
@@ -33,11 +35,16 @@ source('R/target-intake.R')
 list(
   # Setup
   tar_target(data_loc, fs::path(here::here(), 'data')),
+  tar_target(afib_data_loc, fs::path(data_loc, 'ccts', 'afib')),
 
   # AFIB ----
   tar_target(
     afib_medications,
-    read_in_afib_medications(folderName = fs::path(data_loc, 'ccts', 'afib'))
+    read_in_afib_medications(folderName = afib_data_loc)
+  ),
+
+  tar_target(
+
   )
 
   # WES ----
