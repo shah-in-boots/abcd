@@ -16,7 +16,7 @@ tar_option_set(
     'tibble', 'tidyverse', 'here', 'fs', 'vroom',
     # Modeling,
     'tidymodels'
-    ), # packages that your targets need to run
+    ),
   format = 'qs' # default storage format
   # Set other options as needed.
 )
@@ -39,13 +39,16 @@ list(
 
   # AFIB ----
   tar_target(
-    afib_medications,
-    read_in_afib_medications(folderName = afib_data_loc)
+    afib_medications, # Simplified CV meds
+    read_in_afib_medications(dataFolder = afib_data_loc,
+                             regexFile = 'regex-meds.txt')
   ),
 
   tar_target(
-
+    afib_diagnoses, # Diagnoses converted to comorbidities at time point
+    read_in_afib_diagnoses(dataFolder = afib_data_loc)
   )
+
 
   # WES ----
 )

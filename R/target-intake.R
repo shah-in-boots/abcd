@@ -1,10 +1,17 @@
-read_in_afib_medications <- function(folderName = fs::path(),
+read_in_afib_medications <- function(dataFolder = fs::path(),
 																		 regexFile = fs::path()) {
 
-	med_tbl <- fread(fs::path(folderName, 'medications', ext = 'csv'))
+	med_tbl <-
+		fread(
+			fs::path(dataFolder, 'medications', ext = 'csv'),
+			fill = TRUE
+		)
+
+	x <- vroom::vroom(
+			fs::path(dataFolder, 'medications', ext = 'csv'),
+			delim = ','
+	)
 	med_tbl[, medication := tolower(medication)]
-
-
 
 	# This is a long list of medications, need to be filtered
 	meds <-
@@ -50,19 +57,37 @@ read_in_afib_medications <- function(folderName = fs::path(),
 
 }
 
-read_in_afib_diagnoses <- function(folderName = fs::path()) {
+read_in_afib_diagnoses <- function(dataFolder = fs::path()) {
 
 	# Will need to make this "longer"
 	# Each ICD code should be on its own line
 	dx_tbl <-
-		fread(fs::path(folderName, 'diagnosis', ext = 'csv'))[
+		fread(fs::path(dataFolder, 'diagnosis', ext = 'csv'), fill = TRUE)[
 		][, codeList := strsplit(icd_code, '\\|')
 		][, .(icd_code = as.character(unlist(codeList))), by = .(record_id, encounter_id, date)
-		][!is.na(icd_code), ]
+		][!is.na(icd_code), ][
+		][, date := as.Date(date)]
 
-	x <- dx_tbl[1:10000, ]
+	cc_tbl <-
+		icd::icd10_comorbid_elix(
+			dx_tbl,
+			visit_name = 'encounter_id',
+			icd_name = 'icd_code',
+			return_df = TRUE,
+			return_binary = TRUE
+		) |>
+		as.data.table()
 
-	icd::icd10_comorbid_ahrq(x, visit_name = 'encounter_id') |>
-		colSums()
+	cc_tbl[, encounter_id := as.integer(encounter_id)]
+
+	# Create new data set with "comorbidities" at time points
+	id_tbl <- unique(dx_tbl[, .(record_id, encounter_id, date)])
+	comorbid_tbl <-
+		id_tbl[, .(record_id, encounter_id, date)][
+			cc_tbl, on = 'encounter_id'
+		]
+
+	# Return comorbid diagnosis by time of diagnosis
+	comorbid_tbl
 
 }
