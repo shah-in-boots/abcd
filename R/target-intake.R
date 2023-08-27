@@ -1,16 +1,14 @@
 read_in_afib_medications <- function(dataFolder = fs::path(),
 																		 regexFile = fs::path()) {
 
+	# Requires that file has been limited to same number of columns
+	# Make require some level of cleaning (e.g. removing false end lines)
 	med_tbl <-
 		fread(
 			fs::path(dataFolder, 'medications', ext = 'csv'),
 			fill = TRUE
 		)
 
-	x <- vroom::vroom(
-			fs::path(dataFolder, 'medications', ext = 'csv'),
-			delim = ','
-	)
 	med_tbl[, medication := tolower(medication)]
 
 	# This is a long list of medications, need to be filtered
