@@ -80,8 +80,7 @@ The steps required are...
 
 1. Identify if on primary AV nodal blocking agent (e.g. BB or cardioselective CCB)
 1. Check to see if additional medications were added
-
-
+1. Add in anticoagulants
 
 ## ECG analyses
 
