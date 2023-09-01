@@ -41,6 +41,23 @@ drugs[, aad := as.integer(fifelse(aad == 'aad', '1', '0'))
 dat <- ids[drugs, on = 'record_id']
 ```
 
+# Background
+
+## Importance of SDOH
+
+```{r}
+#| label: fig-afib
+#| fig-cap: Relevant SDOH in AF
+knitr::include_graphics(here::here('./output/essien-2021-sdoh-afib.png'))
+```
+
+## Areas to be studied 
+
+- Race/ethnicity interaction with other SDOH to evaluate implicit bias and provider management
+- Neighborhood status and health-care access with impact on AF incidence/outcomes
+- Financial resources may limit efficacy in prevention/treatment/QOL
+- Language barriers and provider management decisions (particularly for rhythm-control strategies)
+
 # Results
 
 ## Demographics
