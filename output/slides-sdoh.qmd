@@ -1,0 +1,147 @@
+---
+title: 'Social Determinants of Health in the Management of Atrial Fibrillation'
+author: "Anish Sanjay Shah, MD/MS<br><span style = 'font-size: 70%;'>Cardiology Fellow<br>University of Illinois at Chicago</span>"
+format: 
+  revealjs:
+    scrollable: true
+execute:
+  cache: true
+tbl-cap-location: bottom
+fig-cap-location: bottom
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(targets)
+library(ggplot2)
+library(dplyr)
+library(gt)
+library(gtsummary)
+library(data.table)
+
+meds <- tar_read(afib_medications, store = here::here('_targets'))
+ids <- tar_read(afib_ids, store = here::here('_targets'))
+
+# Reshape
+drugs <- 
+	meds[, .(record_id, type)] |>
+	dcast(... ~ type, fill = 0) 
+
+drugs[, aad := as.integer(fifelse(aad == 'aad', '1', '0'))
+][, amio := as.integer(fifelse(amio == 'amio', '1', '0'))
+][, bb := as.integer(fifelse(bb == 'bb', '1', '0'))
+][, ccb := as.integer(fifelse(ccb == 'ccb', '1', '0'))
+][, doac := as.integer(fifelse(doac == 'doac', '1', '0'))
+][, other := as.integer(fifelse(other == 'other', '1', '0'))
+][, vka := as.integer(fifelse(vka == 'vka', '1', '0'))
+]
+
+# New data table
+dat <- ids[drugs, on = 'record_id']
+```
+
+# Results
+
+## Demographics
+
+```{r}
+#| label: demo table
+dat |>
+	select(sex,
+				 birth_date,
+				 race_desc,
+				 ethnicity_desc,
+				 language,
+				 smoking_status) |>
+	tbl_summary(by = language,
+							missing = 'no') |>
+	add_overall() 
+```
+
+## Drug Types
+
+```{r}
+#| label: drugs by language
+dat |>
+	select(language,
+				 aad:vka) |>
+	tbl_summary(by = language,
+							missing = 'no') |>
+	add_overall() |>
+	add_p()
+```
+
+---
+
+```{r}
+#| label: drugs by race
+dat |>
+	select(ethnicity_desc,
+				 aad:vka) |>
+	tbl_summary(by = ethnicity_desc,
+							missing = 'no') |>
+	add_overall() |>
+	add_p()
+```
+
+---
+
+```{r}
+#| label: drugs by insurance
+dat |>
+	select(insurance_desc,
+				 aad:vka) |>
+	tbl_summary(by = insurance_desc,
+							missing = 'no') |>
+	add_overall() |>
+	add_p()
+
+```
+
+---
+
+```{r}
+#| label: drugs by insurance X lang
+langStrata <-
+	dat |>
+	select(language,
+				 insurance_desc, aad:vka) |>
+	tbl_strata(
+		strata = language,
+		.tbl_fun = 
+			~ .x |>
+			tbl_summary(by = insurance_desc, missing = 'no') |>
+			add_p() |>
+			add_overall() |>
+			add_n(),
+		.combine_with = 'tbl_stack'
+	)
+
+langStrata
+```
+
+
+---
+
+```{r}
+#| label: drugs by insurance X race
+raceStrata <-
+	dat |>
+	select(race_desc,
+				 insurance_desc, 
+				 aad:vka) |>
+	tbl_strata(
+		strata = race_desc,
+		.tbl_fun = 
+			~ .x |>
+			tbl_summary(by = insurance_desc) |>
+			add_overall() |>
+			add_n(),
+		.combine_with = 'tbl_stack'
+	)
+
+raceStrata
+```
+
+

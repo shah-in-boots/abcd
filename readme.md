@@ -69,6 +69,20 @@ The R scripts will have more definitions on them about how to old.
 
 ## Clinical data
 
+### Medications
+
+*What does medication intensification look like?*
+
+It requires a patient to have been placed or started on an agent that helps slow AF rates, and involves escalating to increased dosing or addition of antiarrhythmics.
+This also includes adding anticoagulants as indicated.
+
+The steps required are...
+
+1. Identify if on primary AV nodal blocking agent (e.g. BB or cardioselective CCB)
+1. Check to see if additional medications were added
+
+
+
 ## ECG analyses
 
 Pipeline for feature extraction:

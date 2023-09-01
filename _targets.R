@@ -15,7 +15,9 @@ tar_option_set(
     # Wrangling
     'tibble', 'tidyverse', 'here', 'fs', 'vroom',
     # Modeling,
-    'tidymodels'
+    'tidymodels',
+    # Presenting,
+    'gt', 'gtsummary'
     ),
   format = 'qs' # default storage format
   # Set other options as needed.
@@ -30,25 +32,33 @@ future::plan(future.callr::callr)
 # Scripts
 source('R/target-options.R')
 source('R/target-intake.R')
+source('R/target-tidy.R')
 
 # Targets
 list(
-  # Setup
+
+  # General ----
   tar_target(data_loc, fs::path(here::here(), 'data')),
   tar_target(afib_data_loc, fs::path(data_loc, 'ccts', 'afib')),
 
-  # AFIB ----
   tar_target(
-    afib_medications, # Simplified CV meds
-    read_in_afib_medications(dataFolder = afib_data_loc,
-                             regexFile = 'regex-meds.txt')
+    cardiac_medications, # Simplified CV meds
+    read_in_cardiac_medications(dataFolder = afib_data_loc,
+                           regexFile = 'regex-meds.txt')
   ),
+
+  # AFIB ----
+
+  tar_target(afib_ids, read_in_redcap_ids(dataFolder = afib_data_loc)),
+
+  tar_target(afib_medications, tidy_afib_medications(meds = cardiac_medications)),
 
   tar_target(
     afib_diagnoses, # Diagnoses converted to comorbidities at time point
     read_in_afib_diagnoses(dataFolder = afib_data_loc)
-  )
+  ),
 
+  tar_quarto(sdoh_slides, 'output/slides-sdoh.qmd')
 
   # WES ----
 )

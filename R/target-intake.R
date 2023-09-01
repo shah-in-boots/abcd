@@ -1,5 +1,59 @@
-read_in_afib_medications <- function(dataFolder = fs::path(),
-																		 regexFile = fs::path()) {
+read_in_redcap_ids <- function(dataFolder = fs::path()) {
+
+	ids <-
+		fread(fs::path(dataFolder, 'redcap-ids', ext = 'csv'))[
+		][, .(record_id, mrn, birth_date, patient_status, death_date, gender, race, ethnicity, zipcode, census_tract, smoking_status, insurance_type, language, marital_status, sexual_orientation)]
+
+	# Race
+	ids[, race_desc := NA_character_
+	][, race_desc := fifelse(race == 1, 'native_american', race_desc)
+	][, race_desc := fifelse(race == 2, 'asian', race_desc)
+	][, race_desc := fifelse(race == 3, 'pacific_islander', race_desc)
+	][, race_desc := fifelse(race == 4, 'black', race_desc)
+	][, race_desc := fifelse(race == 5, 'white', race_desc)
+	][, race_desc := fifelse(race == 6, 'other', race_desc)
+	][, race_desc := fifelse(race == 7, NA_character_, race_desc)
+	][, race_desc := fifelse(race == 8, NA_character_, race_desc)]
+
+	# Ethnicity
+	ids[, ethnicity_desc := NA_character_
+	][, ethnicity_desc := fifelse(ethnicity == 1, 'non_hispanic_latino', ethnicity_desc)
+	][, ethnicity_desc := fifelse(ethnicity == 2, 'hispanic_latino', ethnicity_desc)
+	][, ethnicity_desc := fifelse(ethnicity == 3, NA_character_, ethnicity_desc)
+	][, ethnicity_desc := fifelse(ethnicity == 4, NA_character_, ethnicity_desc)]
+
+	# Sex
+	ids[, sex := NA_character_
+	][, sex := fifelse(gender == 1, 'male', sex)
+	][, sex := fifelse(gender == 2, 'female', sex)
+	][, sex := fifelse(gender == 0, NA_character_, sex)]
+
+	# Language
+	ids[, language := tolower(language)
+	][, language := fifelse(!(language %in% c('english', 'spanish')), 'other', language)]
+
+	# Insurance type
+	ids[, insurance_desc := NA_character_
+	][, insurance_desc := fifelse(insurance_type == 1, 'private', insurance_desc)
+	][, insurance_desc := fifelse(insurance_type == 2, 'government', insurance_desc)
+	][, insurance_desc := fifelse(insurance_type == 3, 'government', insurance_desc)
+	][, insurance_desc := fifelse(insurance_type == 4, 'self_pay', insurance_desc)
+	][, insurance_desc := fifelse(insurance_type == 5, 'other', insurance_desc)
+	][, insurance_desc := fifelse(insurance_type == 6, NA_character_, insurance_desc)]
+
+	# Smoking
+	ids[, smoking_status := tolower(smoking_status)
+	][, smoking_status := fifelse(grepl('unknown', smoking_status), NA_character_, smoking_status)
+	][, smoking_status := fifelse(grepl('assessed', smoking_status), NA_character_, smoking_status)
+	][, smoking_status := fifelse(grepl('smoker|some|every', smoking_status), 'current', smoking_status)]
+
+	# Return
+	ids
+
+}
+
+read_in_cardiac_medications <- function(dataFolder = fs::path(),
+																				regexFile = fs::path()) {
 
 	# Requires that file has been limited to same number of columns
 	# Make require some level of cleaning (e.g. removing false end lines)
