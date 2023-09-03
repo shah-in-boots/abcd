@@ -1,5 +1,6 @@
 # Computational Biorepository for Cardiovascular Disease
 
+
 ## Clinical data
 
 Number of CSV files...
@@ -12,42 +13,6 @@ Number of CSV files...
 -   procedures.csv
 -   visits.csv
 -   vitals.csv
-
-General data structure is...
-
-| Item | Description |
-| - | ---- |
-| RECORD_ID | Unique identifier |
-| ENCOUNTER_ID | Specific encounter data collected, likely similar to DATE/TIME |
-
-## ECG Data
-
-musexmlex.py : The Python script used to read the MUSE XML files and export a '.csv' file, suitable for import into other programs.
-
-PREPARATION:
-
-The 'musexmlex.py' script is a Python script; hence, the Python engine must be installed before using the script. This script was verified using version 3.7.2.
-
-See www.python.org for information about installing Python on your target machine.
-
-After installation, make sure 'python3.exe' is in your system path before continuing.
-
-USE:
-
-Copy the Python script to a location easily referened by your command-line window.
-
-Run the Python script, at the command-line, to export the ECG rhythm to a comma-separated value ('.csv') file. The script writes the output in microvolts.
-
-For example:
-
-`python musexmlex.py MUSE_FILE.xml`
-
-Exports the ECG rhythm stored in the XML file to a file named 'MUSE_FILE.csv', assuming the following:
-
-a.  The Python script 'musexmlex.py' is in the current-working directory.
-b.  The file 'MUSE_FILE.xml' is in the current-working directory.
-c.  Python is installed on the machine, and it is in the system path.
-
 ## AWS access
 
 AWS ID = CARDIO_DARBAR
@@ -83,6 +48,24 @@ The steps required are...
 1. Add in anticoagulants
 
 ## ECG analyses
+
+Current data that has been uploaded to cluster includes:
+
+2010
+2011
+2012
+2013
+2014
+2015
+2016
+2017
+2018
+2019
+2020
+2021
+2022
+2023 (January to end of June)
+
 
 Pipeline for feature extraction:
 
