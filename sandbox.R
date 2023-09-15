@@ -14,33 +14,18 @@ vitals <- read_csv("./sandbox/data/ccts/raw/vitals.csv")
 # 	Language, marital status, sexual orientation
 demo <- read_csv("./sandbox/data/ccts/raw/redcap-ids.csv")
 
-# Visualize surface ECG ----
+# CCTS data for TTE ----
 
-library(shiva)
-library(tidyverse)
-sig <-
-	read_wfdb("MUSE_20230515_104804_37000", record_dir = "./sandbox/data/wfdb/051523/") |>
-	pivot_longer(cols = I:V6, names_to = "lead", values_to = "voltage") |>
-	ggplot(data = _, aes(x = sample, y = voltage, color = lead)) +
-	geom_line() +
-	facet_wrap(~lead, ncol = 1, scales = "free") +
-	theme_minimal()
+ids <- vroom::vroom_lines('output/mrn-hf.txt')
+dat <-
+	vroom::vroom('data/ccts/raw/redcap-ids.csv',
+							 col_types = list(mrn = 'c')) |>
+	filter(mrn %in% ids) |>
+	select(age, gender, race, insurance_type)
 
-# Angela needs help on code ----
+dat |>
+	tbl_summary(by = race)
 
-dx <-
-	read_csv("./output/AfibByLanguage-2023-07-31.csv") |>
-	select(birth_date, patient_status, death_date, gender, race, ethnicity, zipcode, census_tract, smoking_status, insurance_type, language) |>
-	filter(language %in% c("English", "Spanish"))
 
-dx |>
-	select(-zipcode, -census_tract, -death_date) |>
-	tbl_summary(by = language) |>
-	add_p() |>
-	add_overall()
-
-write_csv(dx, "./output/SpanishAfib-2023-07-31.csv")
-
-# Hatem MRN for SDOH ----
 
 
