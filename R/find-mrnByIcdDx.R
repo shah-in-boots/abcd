@@ -70,7 +70,7 @@ icdCodes <- readr::read_lines(fs::path(home, main, icdArg))
 cat('\tHave', length(icdCodes), 'ICD codes to evaluate\n')
 
 # Input file is the diagnosis file of interest
-inputFile <- fs::path(ccts, 'raw', 'diagnosis-proc', ext = 'csv')
+inputFile <- fs::path(ccts, 'raw', 'diagnosis', ext = 'csv')
 
 # Output file
 outputFile <- fs::path(home, main, outputArg)

@@ -12,6 +12,6 @@
 #SBATCH --mail-type=END
 
 module load R/4.2.1-foss-2022a
-Rscript R/find-mrnByIcdDx.R afib-icd.txt afib-mrn.txt $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
+Rscript R/find-mrnByIcdDx.R icd-hf.txt mrn-hf.txt $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
 #Rscript R/convert-icdCodes.R $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
 

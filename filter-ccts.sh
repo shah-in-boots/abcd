@@ -21,4 +21,4 @@ year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 # Past to R script with variable for years
 # Remember to update partition if using large files (e.g. procedure-records)
 printf "Filtering out data from: $year"
-Rscript R/copy-mrn2clinical.R afib-mrn.txt data/ccts/sdoh $year
+Rscript R/copy-mrn2clinical.R mrn-afib.txt data/ccts/afib $year
