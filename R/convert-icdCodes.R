@@ -2,7 +2,7 @@
 
 # `convert-icdCodes.R` converts between ICD-9 to ICD-10
 #
-# The data for ICD codes is contained a file called 'diagnosis.csv'. These files
+# ICD codes are contained in a file called 'diagnosis.csv'. These files
 # are all contained within directories by YEAR to help reduce file size. Will
 # parse through each of these directories 1x1 and then apply batch splits to
 # each to help process them.
