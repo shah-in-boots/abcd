@@ -18,7 +18,7 @@ AWS ID = CARDIO_DARBAR
 
 The data is rescued from the EMR through a CDW pull from the UIC CCTS. This process is somewhat "limited" in that it always results in a pull of data that is a whole system refresh. E.g. the file sizes can be upwards of 10 Gb each. These are zipped files. They are likely too large to host on a local computer. Additionally, each file is formatted and de-identified using a REDCap key that can be found on the main REDCap site (as well as their encounter ID, date/time, etc). 
 
-The data is stored in..
+The data is stored in... 
 
 ~/project/cbcd/data/raw/*
 
