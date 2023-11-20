@@ -15,6 +15,7 @@ AWS ID = CARDIO_DARBAR
 1. Download from the UIC Box folder (or however CCTS delivers it) the respective data pulls on all EMR data-types. This must be done on a local computer.
 1. SSH the *.zip files to the cluster under 'cbcd/data/raw/*'. Be careful not to replace old, potentially important, files based on the name. 
 1. Unzip the files on the remote server (cluster), and rename them to the nomenclature listed below. This is key so other code can utilize the common names for retrieval/manipulation.
+1. Using several iterations over the `csv2parquet.R` code, convert the individual CSV files to PARQUET format (structured in HIVE format by year and month).
 
 The data is rescued from the EMR through a CDW pull from the UIC CCTS. This process is somewhat "limited" in that it always results in a pull of data that is a whole system refresh. E.g. the file sizes can be upwards of 10 Gb each. These are zipped files. They are likely too large to host on a local computer. Additionally, each file is formatted and de-identified using a REDCap key that can be found on the main REDCap site (as well as their encounter ID, date/time, etc). 
 
@@ -24,6 +25,7 @@ The data is stored in...
 
 ...and in a CSV format. These have not been processed, but are first part of the pipeline to organize the data. This data is broken up into several types, which are explained below. For our usage, we rename them for simplicity. 
 
+- demographics.csv = REDCap and MRN key data, along with baseline intake information
 - diagnosis.csv = diagnosis code which may be in ICD9 or ICD10 format
 - labs.csv = lab type and lab value (+/- units)
 - medications.csv = medication, dosage, unit, route
@@ -33,7 +35,14 @@ The data is stored in...
 - visits.csv = record of every visit or encounter, including location
 - vitals.csv = vitals at every visit or encounter
 
-These raw files need to be managed in a referential way, e.g. database, SQL, or potential parquet format (via Apache Arrow). 
+These raw files need to be managed in a referential way, e.g. database, SQL, or potential parquet format (via Apache Arrow). The current infrastructure is oriented around parquet for ease of manipulation within R (and other languages, including Python). 
+
+To convert a CSV file to PARQUET, use the following script located in the root folder for the **cbcd** project
+
+csv2parquet.R 
+
+This contains the appropriate variables that can be manipulated to write out files in parquet format. The current structure is a HIVE style using the YEAR and MONTH of the relevant date for the data, which will lead to a reasonable file size.
+
 
 
 # Phenotype AF
