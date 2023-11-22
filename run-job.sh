@@ -8,5 +8,5 @@
 #SBATCH --output=slurm-%J.out
 
 module load R/4.2.1-foss-2022a
-Rscript R/tidy-duplicateCSV.R data/ccts/sdoh
+Rscript csv2parquet.R
 

@@ -14,7 +14,7 @@ library(arrow)
 library(fs)
 
 # Demographics
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'demographics'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 col_types = schema(MRN = string()),
@@ -28,7 +28,7 @@ if (TRUE) {
 }
 
 # Diagnosis
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'diagnosis'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -44,7 +44,7 @@ if (TRUE) {
 }
 
 # Labs
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'labs'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -60,7 +60,7 @@ if (TRUE) {
 }
 
 # Medications
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'medications'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -76,7 +76,7 @@ if (TRUE) {
 }
 
 # Notes
-if (FALSE) {
+if (TRUE) {
 	file_name <- 'notes'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -92,7 +92,7 @@ if (FALSE) {
 }
 
 # Procedure Dates
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'procedure-dates'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -108,7 +108,7 @@ if (TRUE) {
 }
 
 # Procedure Reports
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'procedure-reports'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>
@@ -124,7 +124,7 @@ if (TRUE) {
 }
 
 # Visits
-if (TRUE) {
+if (FALSE) {
 	file_name <- 'visits'
 	open_dataset(fs::path(raw_path, file_name, ext = 'csv'),
 							 format = 'csv') |>

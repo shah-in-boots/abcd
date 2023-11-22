@@ -8,7 +8,6 @@ year <- as.numeric(args[1])
 
 # Libraries
 library(tidyverse)
-library(data.table)
 library(vroom)
 
 # Input paths
