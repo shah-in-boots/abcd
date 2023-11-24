@@ -12,10 +12,14 @@ AWS ID = CARDIO_DARBAR
 
 **Pipeline**:
 
-1. Download from the UIC Box folder (or however CCTS delivers it) the respective data pulls on all EMR data-types. This must be done on a local computer.
-1. SSH the *.zip files to the cluster under 'cbcd/data/raw/*'. Be careful not to replace old, potentially important, files based on the name. 
-1. Unzip the files on the remote server (cluster), and rename them to the nomenclature listed below. This is key so other code can utilize the common names for retrieval/manipulation.
-1. Using several iterations over the `csv2parquet.R` code, convert the individual CSV files to PARQUET format (structured in HIVE format by year and month).
+1. File transfer from the Clinical Data Warehouse to the Cluster
+	a. Download from the UIC Box folder (or however CCTS delivers it) the respective data pulls on all EMR data-types. This must be done on a local computer.
+	a. SSH the *.zip files to the cluster under 'cbcd/data/raw/*'. Be careful not to replace old, potentially important, files based on the name. 
+	a. Unzip the files on the remote server (cluster), and rename them to the nomenclature listed below. This is key so other code can utilize the common names for retrieval/manipulation.
+1. Partition the CSV files into an out-of-memory friendly format for analysis
+	a. Using the `partition-ccts.sh` script located in the project directory, send a batch job to start processing the files.
+	a. There is a folder called `csv` under the `ccts` folder where data is stored. All of the RAW files will be split by year and placed under this folder with their respective names as __CSV__ files. 
+	a. Then, now that the files are more appropriate in size, can convert to a nested/hive-like file structure using Apache Arrow and the respective __PARQUET__ format. 
 
 The data is rescued from the EMR through a CDW pull from the UIC CCTS. This process is somewhat "limited" in that it always results in a pull of data that is a whole system refresh. E.g. the file sizes can be upwards of 10 Gb each. These are zipped files. They are likely too large to host on a local computer. Additionally, each file is formatted and de-identified using a REDCap key that can be found on the main REDCap site (as well as their encounter ID, date/time, etc). 
 
@@ -39,51 +43,35 @@ These raw files need to be managed in a referential way, e.g. database, SQL, or 
 
 To convert a CSV file to PARQUET, use the following script located in the root folder for the **cbcd** project
 
-csv2parquet.R 
+XXX
 
 This contains the appropriate variables that can be manipulated to write out files in parquet format. The current structure is a HIVE style using the YEAR and MONTH of the relevant date for the data, which will lead to a reasonable file size.
 
+## Electrocardiography (ECG) data
 
+__Pipeline__:
 
-# Phenotype AF
+1. Digitize ECG data and store on the Cluster
+1. Convert to WFDB format
 
-In the main folder, "sh" files will exist that are essentially set-up / calls to run a batch command using SLURM.
-These will generally call either a bash/CL type series of commands or more likely call an R script that is held within the "./R/*" folder. 
-The R scripts will have more definitions on them about how to old. 
+The data-pull for the above *clinical* data is also paired with digitized ECG data. They are all stored in an XML format as their raw extraction from MUSE. There is a pipeline of how they are extracted below for future repeat efforts, as well as which ECGs have been extracted thus far.
 
-## Clinical data
+The current data that has been added to the cluster includes the following, most recently updated on:
 
-### Medications
-
-*What does medication intensification look like?*
-
-It requires a patient to have been placed or started on an agent that helps slow AF rates, and involves escalating to increased dosing or addition of antiarrhythmics.
-This also includes adding anticoagulants as indicated.
-
-The steps required are...
-
-1. Identify if on primary AV nodal blocking agent (e.g. BB or cardioselective CCB)
-1. Check to see if additional medications were added
-1. Add in anticoagulants
-
-## ECG analyses
-
-Current data that has been uploaded to cluster includes:
-
-2010
-2011
-2012
-2013
-2014
-2015
-2016
-2017
-2018
-2019
-2020
-2021
-2022
-2023 (January to end of June)
+- 2010
+- 2011
+- 2012
+- 2013
+- 2014
+- 2015
+- 2016
+- 2017
+- 2018
+- 2019
+- 2020
+- 2021
+- 2022, 06/29/23 by ashah282@uic.edu
+- 2023 (January to end of June), 09/01/23 by ashah282@uic.edu
 
 
 Pipeline for feature extraction:

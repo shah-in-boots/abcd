@@ -354,80 +354,89 @@ display: none;
 
 <div id="computational-biorepository-for-cardiovascular-disease" class="section level1">
 <h1>Computational Biorepository for Cardiovascular Disease</h1>
+<p>This serves as a code-based hub for the EMR-based cardiovascular data
+from the University of Illinois Chicago as part of an IRB-approved,
+HIPAA compliant registry. No data is available on this site or on Github
+directly. However, the code that could generate or organize the data is
+available and intended to be shared by any co-authors or
+collaborators.</p>
+<p>The data is located on a UIC-based cluster, currently an AWS spin-up.
+This cannot be accessed without 1) UIC approval, 2) IRB approval, 3) a
+cluster account, 4) read/write access to the project home. This is under
+two-factor authentication.</p>
+<p>For inquiries, can reach out to members of the Darbar lab for further
+information. If looking for the lab name on the AWS/ACER server, its
+named:</p>
+<p>AWS ID = CARDIO_DARBAR</p>
 <div id="clinical-data" class="section level2">
 <h2>Clinical data</h2>
-<p>Number of CSV files…</p>
-<ul>
-<li>diagnosis.csv</li>
-<li>labs.csv</li>
-<li>medications.csv</li>
-<li>notes.csv</li>
-<li>procedure-reports.csv</li>
-<li>procedures.csv</li>
-<li>visits.csv</li>
-<li>vitals.csv</li>
-</ul>
-<p>General data structure is…</p>
-<table>
-<colgroup>
-<col width="20%" />
-<col width="80%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>RECORD_ID</td>
-<td>Unique identifier</td>
-</tr>
-<tr class="even">
-<td>ENCOUNTER_ID</td>
-<td>Specific encounter data collected, likely similar to DATE/TIME</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="ecg-data" class="section level2">
-<h2>ECG Data</h2>
-<p>musexmlex.py : The Python script used to read the MUSE XML files and
-export a ‘.csv’ file, suitable for import into other programs.</p>
-<p>PREPARATION:</p>
-<p>The ‘musexmlex.py’ script is a Python script; hence, the Python
-engine must be installed before using the script. This script was
-verified using version 3.7.2.</p>
-<p>See www.python.org for information about installing Python on your
-target machine.</p>
-<p>After installation, make sure ‘python3.exe’ is in your system path
-before continuing.</p>
-<p>USE:</p>
-<p>Copy the Python script to a location easily referened by your
-command-line window.</p>
-<p>Run the Python script, at the command-line, to export the ECG rhythm
-to a comma-separated value (‘.csv’) file. The script writes the output
-in microvolts.</p>
-<p>For example:</p>
-<p><code>python musexmlex.py MUSE_FILE.xml</code></p>
-<p>Exports the ECG rhythm stored in the XML file to a file named
-‘MUSE_FILE.csv’, assuming the following:</p>
+<p><strong>Pipeline</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>File transfer from the Clinical Data Warehouse to the Cluster
 <ol style="list-style-type: lower-alpha">
-<li>The Python script ‘musexmlex.py’ is in the current-working
-directory.</li>
-<li>The file ‘MUSE_FILE.xml’ is in the current-working directory.</li>
-<li>Python is installed on the machine, and it is in the system
-path.</li>
+<li>Download from the UIC Box folder (or however CCTS delivers it) the
+respective data pulls on all EMR data-types. This must be done on a
+local computer.</li>
+<li>SSH the <em>.zip files to the cluster under ’cbcd/data/raw/</em>’.
+Be careful not to replace old, potentially important, files based on the
+name.</li>
+<li>Unzip the files on the remote server (cluster), and rename them to
+the nomenclature listed below. This is key so other code can utilize the
+common names for retrieval/manipulation.</li>
+</ol></li>
+<li>Partition the CSV files into an out-of-memory friendly format for
+analysis
+<ol style="list-style-type: lower-alpha">
+<li>There is a folder called <code>csv</code> under the
+<code>ccts</code> folder where data is stored. All of the RAW files will
+be split by year and placed under this folder with their respective
+names.</li>
+<li>Using several iterations over the <code>csv2parquet.R</code> code,
+convert the individual CSV files to PARQUET format (structured in HIVE
+format by year and month).</li>
+</ol></li>
 </ol>
-</div>
-<div id="aws-access" class="section level2">
-<h2>AWS access</h2>
-<p>AWS ID = CARDIO_DARBAR</p>
-<pre><code>Sys.setenv(
-    AWS_REGION = &quot;us-east-2&quot;
-)</code></pre>
-<p>Code examples stored on Evernote</p>
+<p>The data is rescued from the EMR through a CDW pull from the UIC
+CCTS. This process is somewhat “limited” in that it always results in a
+pull of data that is a whole system refresh. E.g. the file sizes can be
+upwards of 10 Gb each. These are zipped files. They are likely too large
+to host on a local computer. Additionally, each file is formatted and
+de-identified using a REDCap key that can be found on the main REDCap
+site (as well as their encounter ID, date/time, etc).</p>
+<p>The data is stored in…</p>
+<p>~/project/cbcd/data/raw/*</p>
+<p>…and in a CSV format. These have not been processed, but are first
+part of the pipeline to organize the data. This data is broken up into
+several types, which are explained below. For our usage, we rename them
+for simplicity.</p>
+<ul>
+<li>demographics.csv = REDCap and MRN key data, along with baseline
+intake information</li>
+<li>diagnosis.csv = diagnosis code which may be in ICD9 or ICD10
+format</li>
+<li>labs.csv = lab type and lab value (+/- units)</li>
+<li>medications.csv = medication, dosage, unit, route</li>
+<li>notes.csv = clinical notes from ALL encounters, including
+non-physician documentation (very large file)</li>
+<li>procedure-dates.csv = name and date of procedure along with CPT
+codes</li>
+<li>procedure-reports.csv = available textual results of procedures
+performed (limited when data was stored as PDF earlier on)</li>
+<li>visits.csv = record of every visit or encounter, including
+location</li>
+<li>vitals.csv = vitals at every visit or encounter</li>
+</ul>
+<p>These raw files need to be managed in a referential way,
+e.g. database, SQL, or potential parquet format (via Apache Arrow). The
+current infrastructure is oriented around parquet for ease of
+manipulation within R (and other languages, including Python).</p>
+<p>To convert a CSV file to PARQUET, use the following script located in
+the root folder for the <strong>cbcd</strong> project</p>
+<p>csv2parquet.R</p>
+<p>This contains the appropriate variables that can be manipulated to
+write out files in parquet format. The current structure is a HIVE style
+using the YEAR and MONTH of the relevant date for the data, which will
+lead to a reasonable file size.</p>
 </div>
 </div>
 <div id="phenotype-af" class="section level1">
@@ -457,6 +466,9 @@ cardioselective CCB)</li>
 </div>
 <div id="ecg-analyses" class="section level2">
 <h2>ECG analyses</h2>
+<p>Current data that has been uploaded to cluster includes:</p>
+<p>2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023
+(January to end of June)</p>
 <p>Pipeline for feature extraction:</p>
 <ol style="list-style-type: decimal">
 <li>Convert ECG full disclosure data into XML (can be done through
