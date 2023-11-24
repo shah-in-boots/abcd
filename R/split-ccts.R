@@ -56,6 +56,7 @@ if (TRUE) {
 # Labs
 if (TRUE) {
 	fileName <- 'labs'
+	cat('Processing the file named', fileName, '\n')
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
 	dat <-
@@ -73,14 +74,21 @@ if (TRUE) {
 		) |>
 		dplyr::mutate(date = as.Date(date)) |>
 		dplyr::filter(year == lubridate::year(date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Medications
@@ -108,14 +116,21 @@ if (TRUE) {
 		dplyr::mutate(start_date = as.Date(start_date)) |>
 		dplyr::mutate(start_date = if_else(start_date <= earliest, earliest, start_date)) |>
 		dplyr::filter(year == lubridate::year(start_date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Notes
@@ -143,14 +158,21 @@ if (FALSE) {
 		) |>
 		dplyr::mutate(note_date = as.Date(note_date)) |>
 		dplyr::filter(year == lubridate::year(note_date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
-	outputFile <- fs::path(outputFolder, fileName, ext = "csv")
-	vroom::vroom_write(x = dat, file = outputFile)
+
+	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
+	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Procedure Dates
@@ -171,14 +193,21 @@ if (TRUE) {
 		) |>
 		dplyr::mutate(date = as.Date(procedure_date)) |>
 		dplyr::filter(year == lubridate::year(date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
-	outputFolder <- fs::path(home, main, 'data', 'ccts', year)
+	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Procedure Reports
@@ -200,14 +229,21 @@ if (TRUE) {
 		) |>
 		dplyr::mutate(date = as.Date(procedure_date)) |>
 		dplyr::filter(year == lubridate::year(date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Visits
@@ -229,14 +265,21 @@ if (TRUE) {
 			)
 		) |>
 		dplyr::filter(year == clock::get_year(start_date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
 
 # Vitals
@@ -258,12 +301,19 @@ if (TRUE) {
 		) |>
 		dplyr::mutate(date = as.Date(date_time)) |>
 		dplyr::filter(year == lubridate::year(date))
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
+	cat('Will write this to the folder', outputFolder, '\n')
+
 	if (!fs::dir_exists(outputFolder)) {
 		fs::dir_create(outputFolder)
 	}
+
 	outputFile <- fs::path(outputFolder, fileName, ext = 'csv')
+	cat('Name of file is...', outputFile, '\n')
+
 	vroom::vroom_write(x = dat, file = outputFile, delim = ',')
+	cat('Done writing\n')
 }
