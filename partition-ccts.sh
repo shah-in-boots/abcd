@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=procedure-records
+#SBATCH --job-name=splitData2Csv
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
@@ -20,5 +20,8 @@ year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
 # Remember to update partition if using large files (e.g. procedure-records)
-printf "Splitting procedure-records for: $year"
-Rscript R/split-procedure-records.R $year
+printf "Splitting data for: $year"
+Rscript R/split-ccts.R $year
+
+# After splitting the data, can think about partitioning 
+# Use Apache Arrow system for `parquet` format

@@ -35,7 +35,7 @@ if (TRUE) {
 		) |>
 		dplyr::mutate(date = as.Date(date)) |>
 		dplyr::filter(year == lubridate::year(date))
-	cat('Read in', input, 'and filtered down by year\n')
+	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths (to CSV folder > Diagnosis > Year)
 	outputFolder <- fs::path(csv_path, fileName, year)
@@ -95,7 +95,12 @@ if (TRUE) {
 		vroom::vroom(
 			col_select = c(
 				record_id = 'RECORD_ID',
-				medication = 'MEDICATION_NAME',
+				order = 'MED_ORDER_NAME',
+				medication = 'GENERIC_NAME',
+				dose_amount = 'DOSE',
+				dose_units = 'DOSE_UNIT',
+				dose_route = 'ROUTE',
+				dose_frequency = 'FREQUENCY',
 				start_date = 'START_DATE',
 				end_date = 'END_DATE'
 			)
@@ -134,8 +139,8 @@ if (TRUE) {
 				note_text = "NOTE_TEXT"
 			)
 		) |>
-		dplyr::mutate(date = as.Date(note_date)) |>
-		dplyr::filter(year == lubridate::year(date))
+		dplyr::mutate(note_date = as.Date(note_date)) |>
+		dplyr::filter(year == lubridate::year(note_date))
 
 	# Output paths
 	outputFolder <- fs::path(csv_path, fileName, year)
@@ -186,9 +191,9 @@ if (TRUE) {
 			col_select = c(
 				record_id = 'RECORD_ID',
 				encounter_id = 'ENCOUNTER_ID',
+				procedure_date = 'PROCEDURE_DATE',
 				procedure_name = 'PROCEDURE_NAME',
-				procedure_report = 'PROCEDURE_REPORT',
-				procedure_date = 'PROCEDURE_DATE'
+				procedure_report = 'PROCEDURE_REPORT'
 			)
 		) |>
 		dplyr::mutate(date = as.Date(procedure_date)) |>
