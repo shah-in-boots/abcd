@@ -4,6 +4,8 @@ This serves as a code-based hub for the EMR-based cardiovascular data from the U
 
 The data is located on a UIC-based cluster, currently an AWS spin-up. This cannot be accessed without 1) UIC approval, 2) IRB approval, 3) a cluster account, 4) read/write access to the project home. This is under two-factor authentication. 
 
+The current status of the data and active issues are located in the `log.md` file in the project home. Please see this file prior to and after making any significant data changes.
+
 For inquiries, can reach out to members of the Darbar lab for further information. If looking for the lab name on the AWS/ACER server, its named:
 
 AWS ID = CARDIO_DARBAR
@@ -18,6 +20,7 @@ AWS ID = CARDIO_DARBAR
 	a. Unzip the files on the remote server (cluster), and rename them to the nomenclature listed below. This is key so other code can utilize the common names for retrieval/manipulation.
 1. Partition the CSV files into an out-of-memory friendly format for analysis
 	a. Using the `partition-ccts.sh` script located in the project directory, send a batch job to start processing the files.
+	a. The custom parameters for this are contained within `R/split-ccts.R`, such that a user can choose to only split certain files. Instructions are located in the file itself.  *Most commonly, `notes.csv` may need to run on a higher power cluster compared to the other files due to file size.*
 	a. There is a folder called `csv` under the `ccts` folder where data is stored. All of the RAW files will be split by year and placed under this folder with their respective names as __CSV__ files. 
 	a. Then, now that the files are more appropriate in size, can convert to a nested/hive-like file structure using Apache Arrow and the respective __PARQUET__ format. 
 
@@ -56,24 +59,6 @@ __Pipeline__:
 
 The data-pull for the above *clinical* data is also paired with digitized ECG data. They are all stored in an XML format as their raw extraction from MUSE. There is a pipeline of how they are extracted below for future repeat efforts, as well as which ECGs have been extracted thus far.
 
-The current data that has been added to the cluster includes the following, most recently updated on:
-
-- 2010
-- 2011
-- 2012
-- 2013
-- 2014
-- 2015
-- 2016
-- 2017
-- 2018
-- 2019
-- 2020
-- 2021
-- 2022, 06/29/23 by ashah282@uic.edu
-- 2023 (January to end of June), 09/01/23 by ashah282@uic.edu
-
-
 Pipeline for feature extraction:
 
 1.  Convert ECG full disclosure data into XML (can be done through MUSE)
@@ -101,3 +86,8 @@ Identifying ECGs based on a diagnosis (e.g. AF), which creates and manipulates a
 find-wfdb2diagnosis.R
 match-diagnosis2mrn.R
 
+## Important Workflows
+
+### Creating MRN-based datasets
+
+We can create a clinical data subset as well as the matching ECG data using a similar approach. This will have to be "run" twice to create data on both accounts. 
