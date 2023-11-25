@@ -150,7 +150,7 @@ if (FALSE) {
 # Notes
 # This is usually a very LARGE file and thus partitioning is difficult
 # May need to run partionining on a different cluster set-up
-if (TRUE) {
+if (FALSE) {
 
 	fileName <- "notes"
 
