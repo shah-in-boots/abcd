@@ -1,8 +1,15 @@
-# `split-ccts.R` is used by SLURM to partition the clinical data
-# This file contains customizable parameters for end-users. 
-# Each section can be ran or ignored. Simply:
-# 	IF (LOGICAL) {script()} 
-# 	Change the LOGICAL value to TRUE or FALSE based on preference
+# `split-ccts.R` is used by SLURM to partition the clinical data This file
+# contains customizable parameters for end-users. Each section can be ran or
+# ignored. The parent command is currently called `partition-ccts.sh` in the
+# project root.
+#
+# `if (<LOGICAL>) { split_csv() }`
+#
+# Change to `TRUE` or `FALSE` on each chunk as needed. Generally, this is for if
+# there are single updates that need to be made, or if wanting to run the code
+# on different cluster configurations. For example, [cpu-t3] with 2 vCPUs is
+# sufficient for most of the files that are read in, however for a enormous file
+# like the notes, will error. Thus, recommend [cpu-c5] with 4-8 vCPUs.
 
 
 # Take each file and split by years
