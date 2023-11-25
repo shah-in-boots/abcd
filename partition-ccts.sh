@@ -1,11 +1,11 @@
 #!/bin/sh
 
-#SBATCH --partition=cpu-t3
-#SBATCH --job-name=splitData2Csv
+#SBATCH --partition=cpu-c5
+#SBATCH --job-name=notes2year
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=1-14
+#SBATCH --cpus-per-task=8		# Number of cores per task
+#SBATCH --array=6
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -20,7 +20,7 @@ year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 
 # Past to R script with variable for years
 # Remember to update partition if using large files (e.g. procedure-records)
-printf "Splitting data for: $year"
+printf "Splitting data for: $year\n"
 Rscript R/split-ccts.R $year
 
 # After splitting the data, can think about partitioning 

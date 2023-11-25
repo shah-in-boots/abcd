@@ -1,3 +1,10 @@
+# `split-ccts.R` is used by SLURM to partition the clinical data
+# This file contains customizable parameters for end-users. 
+# Each section can be ran or ignored. Simply:
+# 	IF (LOGICAL) {script()} 
+# 	Change the LOGICAL value to TRUE or FALSE based on preference
+
+
 # Take each file and split by years
 args <- commandArgs(trailingOnly = TRUE)
 year <- as.numeric(args[1])
@@ -18,7 +25,7 @@ csv_path <- fs::path(home, main, 'data', 'ccts', 'csv')
 # 	Will remain in the "raw" folder
 
 # Diagnosis
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'diagnosis'
 	cat('Processing the file named', fileName, '\n')
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
@@ -54,7 +61,7 @@ if (TRUE) {
 }
 
 # Labs
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'labs'
 	cat('Processing the file named', fileName, '\n')
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
@@ -92,7 +99,7 @@ if (TRUE) {
 }
 
 # Medications
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'medications'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
@@ -136,7 +143,7 @@ if (TRUE) {
 # Notes
 # This is usually a very LARGE file and thus partitioning is difficult
 # May need to run partionining on a different cluster set-up
-if (FALSE) {
+if (TRUE) {
 
 	fileName <- "notes"
 
@@ -176,7 +183,7 @@ if (FALSE) {
 }
 
 # Procedure Dates
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'procedure-dates'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
@@ -211,7 +218,7 @@ if (TRUE) {
 }
 
 # Procedure Reports
-if (TRUE) {
+if (FALSE) {
 
 	fileName <- 'procedure-reports'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
@@ -247,7 +254,7 @@ if (TRUE) {
 }
 
 # Visits
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'visits'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
@@ -283,7 +290,7 @@ if (TRUE) {
 }
 
 # Vitals
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'vitals'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
