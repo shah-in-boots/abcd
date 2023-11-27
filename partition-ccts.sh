@@ -30,7 +30,7 @@ module load R/4.2.1-foss-2022a
 # The second section can be used by SLURM by splitting on topic
 
 if true
-then
+then # 1 = SPLIT CSV
 
 	# Years setup (2010 to 2023 is 14...)
 	years=($(seq 2010 2023))
@@ -41,7 +41,8 @@ then
 	printf "Splitting data for: $year\n"
 	Rscript R/split-ccts.R $year
 
-else
+
+else # 2 = CONVERT CSV TO PARQUET
 
 	# Data types below
 	types=(
@@ -58,8 +59,6 @@ else
 
 	# Type is the part of the script that will be analyzed
 	type=${types[$SLURM_ARRAY_TASK_ID - 1])}
-
-
 
 fi
 
