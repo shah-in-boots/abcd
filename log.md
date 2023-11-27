@@ -1,7 +1,3 @@
-# Log
-
-ashah282@uic.edu @ 11/24/23: Clinical data split for all data sources except Notes. From 2010 to July 2023 (refresh 2). Issue with Notes due to file size (?). Errored on array ID 5-14. Trial again with higher CPU available?
-
 # Current Data
 
 __Clinical__:
@@ -32,3 +28,10 @@ __ECG__:
 - 2021
 - 2022, 06/29/23 by ashah282@uic.edu
 - 2023 (January to end of June), 09/01/23 by ashah282@uic.edu
+
+# Log
+
+ashah282 @ 11/27/23: Attempting to partition visits however error in CSV conversion (year=2020). Also error in procedure-dates folder as not run, will update.
+
+ashah282 @ 11/24/23: Clinical data split for all data sources except Notes. From 2010 to July 2023 (refresh 2). Issue with Notes due to file size (?). Errored on array ID 5-14. Trial again with higher CPU available? 
+
