@@ -1,6 +1,18 @@
-# `csv2parquet.R` is the code set required to both open and write <CSV> to <PARQUET> format, which both saves on file size and allows for more efficiently partitioned data. The pre-requisite is that the datasets have been organized and prepared by the `split-ccts.R` code (which breaks the files down by year). Both of these are incorporated into the SLURM command instructed by `partition-ccts.sh`. 
-# 
-# Currently, the partitioning strategy is to place files by their topic (e.g. medications) in a folder and then subdivide by year. This could change as modifications to the data are made.
+# `csv2parquet.R` is the code set required to both open and write <CSV> to
+# <PARQUET> format, which both saves on file size and allows for more
+# efficiently partitioned data. The pre-requisite is that the datasets have been
+# organized and prepared by the `split-ccts.R` code (which breaks the files down
+# by year). Both of these are incorporated into the SLURM command instructed by
+# `partition-ccts.sh`.
+#
+# Currently, the partitioning strategy is to place files by their topic (e.g.
+# medications) in a folder and then subdivide by year. This could change as
+# modifications to the data are made.
+
+# Get the trailing argument, which tells which element to evaluate
+args <- commandArgs(trailingOnly = TRUE)
+type <- as.character(args[1])
+cat('Will work on ', type, 'file \n')
 
 # Libraries
 library(tidyverse)
@@ -12,8 +24,8 @@ csv_path <- 'data/ccts/csv'
 pq_path <- 'data/ccts/pq'
 
 # Demographics
-if (TRUE) {
-	file_name <- 'demographics'
+if (type == 'demographics') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name, ext = 'csv'),
 							 col_types = schema(MRN = string()),
 							 format = 'csv') |>
@@ -28,10 +40,10 @@ if (TRUE) {
 }
 
 # Diagnosis
-if (TRUE) {
-	file_name <- 'diagnosis'
+if (type == 'diagnosis') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -44,10 +56,10 @@ if (TRUE) {
 }
 
 # Labs
-if (TRUE) {
-	file_name <- 'labs'
+if (type == 'labs') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -60,10 +72,10 @@ if (TRUE) {
 }
 
 # Medications
-if (TRUE) {
-	file_name <- 'medications'
+if (type == 'medications') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -76,10 +88,10 @@ if (TRUE) {
 }
 
 # Notes
-if (TRUE) {
-	file_name <- 'notes'
+if (type == 'notes') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -92,10 +104,10 @@ if (TRUE) {
 }
 
 # Procedure Dates
-if (TRUE) {
-	file_name <- 'procedure-dates'
+if (type == 'procedure-dates') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -108,10 +120,10 @@ if (TRUE) {
 }
 
 # Procedure Reports
-if (TRUE) {
-	file_name <- 'procedure-reports'
+if (type == 'procedure-reports') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -124,10 +136,10 @@ if (TRUE) {
 }
 
 # Visits
-if (TRUE) {
-	file_name <- 'visits'
+if (type == 'visits') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(
@@ -140,10 +152,10 @@ if (TRUE) {
 }
 
 # Vitals
-if (TRUE) {
-	file_name <- 'vitals'
+if (type == 'vitals') {
+	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
-							 partitioning = 'year', 
+							 partitioning = 'year',
 							 format = 'csv') |>
 		group_by(year) |>
 		write_dataset(

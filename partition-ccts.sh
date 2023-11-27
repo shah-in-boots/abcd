@@ -46,14 +46,14 @@ else # 2 = CONVERT CSV TO PARQUET
 
 	# Data types below
 	types=(
-		'demographics',
-		'diagnosis',
-		'labs',
-		'medications',
-		'notes',
-		'procedure-dates',
-		'procedure-reports',
-		'visits',
+		'demographics'
+		'diagnosis'
+		'labs'
+		'medications'
+		'notes'
+		'procedure-dates'
+		'procedure-reports'
+		'visits'
 		'vitals'
 	)
 
@@ -62,5 +62,3 @@ else # 2 = CONVERT CSV TO PARQUET
 
 fi
 
-# After splitting the data, can think about partitioning
-# Use Apache Arrow system for `parquet` format
