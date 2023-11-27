@@ -205,8 +205,8 @@ if (FALSE) {
 				coding_system = 'CODING_SYSTEM'
 			)
 		) |>
-		dplyr::mutate(date = as.Date(procedure_date)) |>
-		dplyr::filter(year == lubridate::year(date))
+		dplyr::mutate(procedure_date = as.Date(procedure_date)) |>
+		dplyr::filter(year == lubridate::year(procedure_date))
 	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths
@@ -261,7 +261,7 @@ if (FALSE) {
 }
 
 # Visits
-if (FALSE) {
+if (TRUE) {
 	fileName <- 'visits'
 	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
 
@@ -274,11 +274,11 @@ if (FALSE) {
 				visit_location = 'ENCOUNTER_TYPE',
 				visit_type = 'VISIT_TYPE',
 				visit_discharge = 'DISCHARGE_DISPOSITION',
-				start_date = 'VISIT_START_DATE',
-				end_date = 'VISIT_END_DATE'
+				visit_start_date = 'VISIT_START_DATE',
+				visit_end_date = 'VISIT_END_DATE'
 			)
 		) |>
-		dplyr::filter(year == clock::get_year(start_date))
+		dplyr::filter(year == clock::get_year(visit_start_date))
 	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths

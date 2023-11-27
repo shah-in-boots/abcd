@@ -1,11 +1,11 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=notes2year
+#SBATCH --job-name=parquet
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=1-14
+#SBATCH --array=1-9
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -44,7 +44,7 @@ then # 1 = SPLIT CSV
 
 else # 2 = CONVERT CSV TO PARQUET
 
-	# Data types below
+	# Data types below = 9 overall
 	types=(
 		'demographics'
 		'diagnosis'
@@ -59,6 +59,9 @@ else # 2 = CONVERT CSV TO PARQUET
 
 	# Type is the part of the script that will be analyzed
 	type=${types[$SLURM_ARRAY_TASK_ID - 1])}
+
+	# Rscript to run
+	Rscript R/csv2parquet.R $type
 
 fi
 

@@ -35,7 +35,7 @@ if (type == 'demographics') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -51,7 +51,7 @@ if (type == 'diagnosis') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -67,7 +67,7 @@ if (type == 'labs') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -83,7 +83,7 @@ if (type == 'medications') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -99,7 +99,7 @@ if (type == 'notes') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -115,7 +115,7 @@ if (type == 'procedure-dates') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -131,7 +131,7 @@ if (type == 'procedure-reports') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -147,7 +147,7 @@ if (type == 'visits') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
 
@@ -163,6 +163,6 @@ if (type == 'vitals') {
 			format = 'parquet',
 			basename_template = paste0(file_name, '-{i}.parquet'),
 			max_rows_per_file = 1e8,
-			existing_data_behavior = 'delete_matching'
+			existing_data_behavior = 'overwrite'
 		)
 }
