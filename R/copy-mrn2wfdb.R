@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# `copy-mrn2wfdb` takes a list of MRNs and copies WFDB files that match
+# `copy-mrn2wfdb` takes a list of MRNs and copies WFDB files that match. Will use an array system to help with job batching.
 #
 # Output:
 # 	Creates a folder named by the ARG of WFDB files
@@ -63,7 +63,8 @@ mrnData <-
 	vroom::vroom() |>
 	dplyr::select(mrn) |>
 	dplyr::distinct() |>
-	janitor::clean_names()
+	janitor::clean_names() |>
+	dplyr::mutate(mrn = as.numeric(mrn)) # Make MRN numeric
 cat("\tThere are", nrow(mrnData), "MRNs to evaluate\n")
 
 # Output folder
@@ -102,7 +103,8 @@ logData <-
 		skip = min(chunk, na.rm = TRUE),
 		n_max = length(chunk)
 	) |>
-	janitor::clean_names()
+	janitor::clean_names() |>
+	mutate(mrn = as.numeric(mrn))
 
 cat("\tJust read in", nrow(logData), "lines of data from the log\n")
 

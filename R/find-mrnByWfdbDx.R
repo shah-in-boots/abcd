@@ -128,7 +128,9 @@ out <- foreach(i = 1:n, .combine = 'c', .errorhandling = 'remove') %dopar% {
 					 header,
 					 ignore.case = TRUE,
 					 value = TRUE) |>
-			gsub('\\D', '', x = _)
+			gsub('\\D', '', x = _) |>
+			as.numeric() |>
+			as.character() 
 
 		readr::write_lines(mrn, file = outputFile, append = TRUE)
 
