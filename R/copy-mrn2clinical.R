@@ -9,11 +9,11 @@
 # 		Expects file to be a list with an MRN on each line
 # 	OUTPUT <folder>
 # 		Name of path and folder name to put findings
-#			Makes a subset of data from the giant initial datasestm
-# 	FOLDER <character>
+#			Makes a subset of data from the master dataset
+# 	SUBFOLDER <character>
 # 		Folder name to evaluate
 # 		In this case, all the CCTS is split into folders by year
-# 		Expected to be within data/ccts/*
+# 		Expected to be within ~/ccts/emr/*
 #
 # Output [1]:
 # 	DATA <csv>
