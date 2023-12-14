@@ -13,7 +13,7 @@
 
 
 # Take each file and split by years
-args <- commandArgs(trailingOnly = FALSE)
+args <- commandArgs(trailingOnly = TRUE)
 year <- as.numeric(args[1])
 cat('Will filter to year =', year, '\n')
 

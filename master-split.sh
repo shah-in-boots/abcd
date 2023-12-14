@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=1-14
+#SBATCH --array=6
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -29,7 +29,7 @@ module load R/4.2.1-foss-2022a
 # The first section can be used by SLURM by splitting by year
 # The second section can be used by SLURM by splitting on topic
 
-if true
+if false
 then # 1 = SPLIT CSV
 
 	# Years setup (2010 to 2023 is 14...)

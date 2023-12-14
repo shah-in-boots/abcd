@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=1-14
+#SBATCH --array=2-14
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -33,6 +33,6 @@ printf "Filtering out data from: $year"
 # 	YEAR (works as a batching variable)
 # 	OUTPUT (folder for where data should be placed)
 # 	FORMAT (format of saving files, e.g parquet, CSV)
-Rscript R/copy-mrn2clinical.R mrn-afib.txt $year ~/data/afeqt/emr parquet
+Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/afeqt/emr parquet
 
 # Will repeat for ECG data
