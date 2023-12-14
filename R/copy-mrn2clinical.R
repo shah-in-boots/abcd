@@ -66,6 +66,7 @@ cat('\tThere are', length(mrnData), 'MRNs to be evaluated\n')
 # Input file is in the batch folder
 inputDiagnosis <- fs::path(ccts, folderName, 'diagnosis', ext = 'csv')
 inputMedications <- fs::path(ccts, folderName, 'medications', ext = 'csv')
+inputNotes <- fs::path(ccts, folderName, 'notes', ext = 'csv')
 inputVitals <- fs::path(ccts, folderName, 'vitals', ext = 'csv')
 inputVisits <- fs::path(ccts, folderName, 'visits', ext = 'csv')
 inputLabs <- fs::path(ccts, folderName, 'labs', ext = 'csv')
