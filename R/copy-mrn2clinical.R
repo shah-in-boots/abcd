@@ -7,13 +7,22 @@
 # 		Path to list of MRNs file and name of it
 # 		Assumes that path is from project home (e.g. ~/projects/cbcd/.)
 # 		Expects file to be a list with an MRN on each line
+# 	YEAR <character>
+# 		Folder name to evaluate
+# 		In this case, all the CCTS is split into folders by year
+# 		Expected to be within ~/ccts/emr/pq/*
 # 	OUTPUT <folder>
 # 		Name of path and folder name to put findings
 #			Makes a subset of data from the master dataset
-# 	SUBFOLDER <character>
-# 		Folder name to evaluate
-# 		In this case, all the CCTS is split into folders by year
-# 		Expected to be within ~/ccts/emr/*
+#			Example: ~/data/afeqt/emr/*
+#		FORMAT <character>
+#			Name of type of format to output
+#			Likely will be placed within "years" of the data being obtained
+#			Keeps datafile size "smaller", and can be in the following formats
+#			- parquet
+#			- feather
+#			- arrow
+#			- cs
 #
 # Output [1]:
 # 	DATA <csv>
@@ -34,20 +43,23 @@ library(vroom)
 library(parallel)
 library(foreach)
 library(stringr)
+library(arrow)
 
 # Paths
 home <- fs::path_expand('~')
-main <- fs::path('projects', 'cbcd')
-ccts <- fs::path(home, main, 'data', 'ccts')
+project <- fs::path(home, 'projects', 'cbcd')
+ccts <- fs::path(home, 'ccts', 'emr')
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
 mrnArg <- as.character(args[1])
-outputArg <- as.character(args[2])
-folderName <- as.character(args[3])
+yearName <- as.numeric(args[2])
+outputArg <- as.character(args[3])
+formatArg <- as.character(args[4])
 cat('\tName of MRN file:', mrnArg, '\n')
+cat('\tReading in from data from year:', yearName, '\n')
 cat('\tWill write to folder:', outputArg, '\n')
-cat('\tReading in from folder:', folderName, '\n')
+cat('\tSaving in format:', formatArg, '\n')
 
 # Parallel...
 nCPU <- parallel::detectCores()
@@ -59,30 +71,27 @@ cat('Attempt parallelization with', nCPU, 'cores\n')
 cat('\nHandling the inputs & outputs:\n')
 
 # MRNs
-mrnFile <- fs::path(home, main, mrnArg)
-mrnData <- vroom::vroom_lines(mrnFile)
+mrnFile <- fs::path(project, mrnArg)
+mrnData <-
+	vroom::vroom_lines(mrnFile) |>
+	as.numeric()
 cat('\tThere are', length(mrnData), 'MRNs to be evaluated\n')
-
-# Input file is in the batch folder
-inputDiagnosis <- fs::path(ccts, folderName, 'diagnosis', ext = 'csv')
-inputMedications <- fs::path(ccts, folderName, 'medications', ext = 'csv')
-inputNotes <- fs::path(ccts, folderName, 'notes', ext = 'csv')
-inputVitals <- fs::path(ccts, folderName, 'vitals', ext = 'csv')
-inputVisits <- fs::path(ccts, folderName, 'visits', ext = 'csv')
-inputLabs <- fs::path(ccts, folderName, 'labs', ext = 'csv')
-inputProcedures <- fs::path(ccts, folderName, 'procedure-records', ext = 'csv')
 
 # Get record IDs to help match on key
 redcap <-
-	fs::path(ccts, 'raw', 'redcap-ids', ext = 'csv') |>
-	vroom::vroom() |>
-	dplyr::mutate(mrn = stringr::str_pad(mrn, width = 9, pad = '0'))
+	fs::path(ccts, 'pq', 'demographics-0.parquet') |>
+	arrow::read_parquet() |>
+	#dplyr::mutate(mrn = stringr::str_pad(mrn, width = 9, pad = '0'))
+	dplyr::mutate(mrn = as.numeric(mrn))
 
 key <- redcap$record_id[which(redcap$mrn %in% mrnData)]
 cat('\tThere are a total of', length(key), 'MRNs in the CCTS data\n')
 
 # Output file
-outputFolder <- fs::path(home, main, outputArg)
+#outputFolder <- fs::path(home, main, outputArg)
+outputFolder <-
+	fs::path(outputArg) |>
+	fs::path_expand()
 cat('\tWill copy filtered data to folder...', outputFolder, '\n')
 
 # Move to next component
@@ -91,64 +100,51 @@ cat('\nNow will go through individual data types by individual files\n\n')
 # Write Out Files ----
 
 cat('\tAnalyzing diagnosis\n')
-
-vroom::vroom(inputDiagnosis) |>
+arrow::open_dataset(fs::path(ccts, 'pq', 'diagnosis'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'diagnosis.csv'),
-		delim = ',',
-		append = TRUE
-	)
+	arrow::write_dataset(outputFolder, format = formatArg)
 
 cat('\tAnalyzing labs\n')
-
-vroom::vroom(inputLabs) |>
+arrow::open_dataset(fs::path(ccts, 'pq', 'labs'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'labs.csv'),
-		delim = ',',
-		append = TRUE
-	)
-
-cat('\tAnalyzing visits\n')
-
-vroom::vroom(inputVisits) |>
-	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'visits.csv'),
-		delim = ',',
-		append = TRUE
-	)
-
-cat('\tAnalyzing vitals\n')
-
-vroom::vroom(inputVitals) |>
-	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'vitals.csv'),
-		delim = ',',
-		append = TRUE
-	)
-
-cat('\tAnalyzing procedures\n')
-
-vroom::vroom(inputProcedures) |>
-	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'procedures.csv'),
-		delim = ',',
-		append = TRUE
-	)
+	arrow::write_dataset(outputFolder, format = formatArg)
 
 cat('\tAnalyzing medications\n')
-
-vroom::vroom(inputMedications) |>
+arrow::open_dataset(fs::path(ccts, 'pq', 'medications'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	vroom::vroom_write(
-		file = fs::path(outputFolder, 'medications.csv'),
-		delim = ',',
-		append = TRUE
-	)
+	arrow::write_dataset(outputFolder, format = formatArg)
 
+cat('\tAnalyzing notes\n')
+arrow::open_dataset(fs::path(ccts, 'pq', 'notes'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
+	dplyr::filter(record_id %in% key) |>
+	arrow::write_dataset(outputFolder, format = formatArg)
+
+cat('\tAnalyzing procedure-dates\n')
+arrow::open_dataset(fs::path(ccts, 'pq', 'procedure-dates'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
+	dplyr::filter(record_id %in% key) |>
+	arrow::write_dataset(outputFolder, format = formatArg)
+
+cat('\tAnalyzing procedure-reports\n')
+arrow::open_dataset(fs::path(ccts, 'pq', 'procedure-reports'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
+	dplyr::filter(record_id %in% key) |>
+	arrow::write_dataset(outputFolder, format = formatArg)
+
+cat('\tAnalyzing visits\n')
+arrow::open_dataset(fs::path(ccts, 'pq', 'visits'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
+	dplyr::filter(record_id %in% key) |>
+	arrow::write_dataset(outputFolder, format = formatArg)
+
+cat('\tAnalyzing vitals\n')
+arrow::open_dataset(fs::path(ccts, 'pq', 'vitals'), format = 'parquet') |>
+	dplyr::filter(year == yearName) |>
+	dplyr::filter(record_id %in% key) |>
+	arrow::write_dataset(outputFolder, format = formatArg)
 
 cat('\nDone with writing out files!')
