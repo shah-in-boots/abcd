@@ -20,8 +20,8 @@ library(arrow)
 library(fs)
 
 # Variables & paths for root data storage
-csv_path <- 'data/ccts/csv'
-pq_path <- 'data/ccts/pq'
+csv_path <- '~/ccts/emr/csv'
+pq_path <- '~/ccts/emr/pq'
 
 # Demographics
 if (type == 'demographics') {

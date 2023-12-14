@@ -13,7 +13,7 @@
 
 
 # Take each file and split by years
-args <- commandArgs(trailingOnly = TRUE)
+args <- commandArgs(trailingOnly = FALSE)
 year <- as.numeric(args[1])
 cat('Will filter to year =', year, '\n')
 
@@ -24,8 +24,9 @@ library(fs)
 
 # Paths
 home <- fs::path_expand('~')
-main <- fs::path('projects', 'cbcd')
-csv_path <- fs::path(home, main, 'data', 'ccts', 'csv')
+raw_path <- fs::path(home, 'ccts', 'emr', 'raw')
+csv_path <- fs::path(home, 'ccts', 'emr', 'csv')
+project <- fs::path('projects', 'cbcd')
 
 # Demographics
 # 	Do not need to split these actually
@@ -35,7 +36,7 @@ csv_path <- fs::path(home, main, 'data', 'ccts', 'csv')
 if (FALSE) {
 	fileName <- 'diagnosis'
 	cat('Processing the file named', fileName, '\n')
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -71,7 +72,7 @@ if (FALSE) {
 if (FALSE) {
 	fileName <- 'labs'
 	cat('Processing the file named', fileName, '\n')
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -108,7 +109,7 @@ if (FALSE) {
 # Medications
 if (FALSE) {
 	fileName <- 'medications'
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	earliest <- as.Date('2010-01-01')
 
@@ -151,10 +152,8 @@ if (FALSE) {
 # This is usually a very LARGE file and thus partitioning is difficult
 # May need to run partionining on a different cluster set-up
 if (FALSE) {
-
 	fileName <- "notes"
-
-	dataFile <- fs::path(home, main, "data", "ccts", "raw", fileName, ext = "csv")
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -190,9 +189,9 @@ if (FALSE) {
 }
 
 # Procedure Dates
-if (FALSE) {
+if (TRUE) {
 	fileName <- 'procedure-dates'
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -228,7 +227,7 @@ if (FALSE) {
 if (FALSE) {
 
 	fileName <- 'procedure-reports'
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -261,9 +260,9 @@ if (FALSE) {
 }
 
 # Visits
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'visits'
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>
@@ -299,7 +298,7 @@ if (TRUE) {
 # Vitals
 if (FALSE) {
 	fileName <- 'vitals'
-	dataFile <- fs::path(home, main, 'data', 'ccts', 'raw', fileName, ext = 'csv')
+	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
 	dat <-
 		dataFile |>

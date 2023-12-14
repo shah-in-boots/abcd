@@ -11,7 +11,7 @@
 #SBATCH --mail-user=ashah282@uic.edu
 #SBATCH --mail-type=END
 
-# Master Script -- ccts-pull.sh
+# Script -- master-pull.sh
 #
 # This script is designed to extract all clinical data for a set of MRNs.
 # 	Includes all the data from the EMR from 2010 to 2023
@@ -25,8 +25,14 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 printf "Filtering out data from: $year"
 
-# Pass to R script with variable for years
-# Also needs list of MRNs and the output data folder
-Rscript R/copy-mrn2clinical.R mrn-afib.txt data/ccts/afib $year
+# Subcript -- copy-mrn2clinical.R 
+# 
+# THis script is desgined to work with the clinical data from CCTS
+# Uses several arguments:
+# 	MRN
+# 	YEAR (works as a batching variable)
+# 	OUTPUT (folder for where data should be placed)
+# 	FORMAT (format of saving files, e.g parquet, CSV)
+Rscript R/copy-mrn2clinical.R mrn-afib.txt $year ~/data/afeqt/emr parquet
 
 # Will repeat for ECG data
