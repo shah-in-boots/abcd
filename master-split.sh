@@ -1,11 +1,11 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=parquet
+#SBATCH --job-name=visits2parquet
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=6
+#SBATCH --array=8
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -29,8 +29,9 @@ module load R/4.2.1-foss-2022a
 # The first section can be used by SLURM by splitting by year
 # The second section can be used by SLURM by splitting on topic
 
+# 1 = SPLIT CSV
 if false
-then # 1 = SPLIT CSV
+then 
 
 	# Years setup (2010 to 2023 is 14...)
 	years=($(seq 2010 2023))
@@ -38,11 +39,14 @@ then # 1 = SPLIT CSV
 
 	# Past to R script with variable for years
 	# Remember to update partition if using large files (e.g. procedure-records)
+	# Can also select which variables are to be evaluated in Rscript
 	printf "Splitting data for: $year\n"
 	Rscript R/split-ccts.R $year
+fi
 
-
-else # 2 = CONVERT CSV TO PARQUET
+# 2 = CONVERT CSV TO PARQUET
+if true 
+then
 
 	# Data types below = 9 overall
 	types=(

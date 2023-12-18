@@ -189,7 +189,7 @@ if (FALSE) {
 }
 
 # Procedure Dates
-if (TRUE) {
+if (FALSE) {
 	fileName <- 'procedure-dates'
 	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
@@ -260,7 +260,7 @@ if (FALSE) {
 }
 
 # Visits
-if (FALSE) {
+if (TRUE) {
 	fileName <- 'visits'
 	dataFile <- fs::path(raw_path, fileName, ext = 'csv')
 
