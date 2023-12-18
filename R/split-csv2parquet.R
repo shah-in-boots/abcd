@@ -140,7 +140,16 @@ if (type == 'visits') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 schema = Schema(
+							 	record_id = int32(),
+							 	encounter_id = int32(),
+							 	visit_location = utf8(),
+							 	visit_type = utf8(),
+							 	visit_discharge = utf8(),
+							 	start_date = timestamp(),
+							 	end_date = timestamp()
+							 )) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
