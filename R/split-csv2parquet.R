@@ -8,6 +8,8 @@
 # Currently, the partitioning strategy is to place files by their topic (e.g.
 # medications) in a folder and then subdivide by year. This could change as
 # modifications to the data are made.
+#
+# Note: this file should likely only be run on a cluster based on file sizes
 
 # Get the trailing argument, which tells which element to evaluate
 args <- commandArgs(trailingOnly = TRUE)
