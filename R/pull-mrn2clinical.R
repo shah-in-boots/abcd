@@ -103,55 +103,89 @@ cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 fileType <- 'labs'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 fileType <- 'medications'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
+
 
 fileType <- 'notes'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 fileType <- 'procedure-dates'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
+
 
 fileType <- 'procedure-reports'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 fileType <- 'visits'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 fileType <- 'vitals'
 cat('\tAnalyzing ', fileType, '\n')
 arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
+	arrow::write_dataset(
+		fs::path(outputFolder),
+		format = formatArg,
+		basename_template = paste0(fileType, '-{i}.', as.character(format))
+	)
 
 cat('\nDone with writing out files!')
