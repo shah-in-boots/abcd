@@ -25,14 +25,14 @@ years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
 printf "Filtering out data from: $year"
 
-# Subcript -- copy-mrn2clinical.R 
-# 
+# Subcript -- copy-mrn2clinical.R
+#
 # THis script is desgined to work with the clinical data from CCTS
 # Uses several arguments:
 # 	MRN
 # 	YEAR (works as a batching variable)
 # 	OUTPUT (folder for where data should be placed)
 # 	FORMAT (format of saving files, e.g parquet, CSV)
-Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/afeqt/emr parquet
+Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/afeqt/emr/ parquet
 
 # Will repeat for ECG data

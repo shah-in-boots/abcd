@@ -88,7 +88,6 @@ key <- redcap$record_id[which(redcap$mrn %in% mrnData)]
 cat('\tThere are a total of', length(key), 'MRNs in the CCTS data\n')
 
 # Output file
-#outputFolder <- fs::path(home, main, outputArg)
 outputFolder <-
 	fs::path(outputArg) |>
 	fs::path_expand()
@@ -99,52 +98,60 @@ cat('\nNow will go through individual data types by individual files\n\n')
 
 # Write Out Files ----
 
-cat('\tAnalyzing diagnosis\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'diagnosis'), format = 'parquet') |>
+fileType <- 'diagnosis'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing labs\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'labs'), format = 'parquet') |>
+fileType <- 'labs'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing medications\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'medications'), format = 'parquet') |>
+fileType <- 'medications'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing notes\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'notes'), format = 'parquet') |>
+fileType <- 'notes'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing procedure-dates\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'procedure-dates'), format = 'parquet') |>
+fileType <- 'procedure-dates'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing procedure-reports\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'procedure-reports'), format = 'parquet') |>
+fileType <- 'procedure-reports'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing visits\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'visits'), format = 'parquet') |>
+fileType <- 'visits'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
-cat('\tAnalyzing vitals\n')
-arrow::open_dataset(fs::path(ccts, 'pq', 'vitals'), format = 'parquet') |>
+fileType <- 'vitals'
+cat('\tAnalyzing ', fileType, '\n')
+arrow::open_dataset(fs::path(ccts, 'pq', fileType), format = 'parquet') |>
 	dplyr::filter(year == yearName) |>
 	dplyr::filter(record_id %in% key) |>
-	arrow::write_dataset(outputFolder, format = formatArg)
+	arrow::write_dataset(fs::path(outputFolder, fileType), format = formatArg)
 
 cat('\nDone with writing out files!')
