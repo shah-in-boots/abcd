@@ -41,7 +41,7 @@ then
 	# Remember to update partition if using large files (e.g. procedure-records)
 	# Can also select which variables are to be evaluated in Rscript
 	printf "Splitting data for: $year\n"
-	Rscript R/split-ccts.R $year
+	Rscript R/split-ccts2csv.R $year
 fi
 
 # 2 = CONVERT CSV TO PARQUET
@@ -65,7 +65,7 @@ then
 	type=${types[$SLURM_ARRAY_TASK_ID - 1])}
 
 	# Rscript to run
-	Rscript R/csv2parquet.R $type
+	Rscript R/split-csv2parquet.R $type
 
 fi
 
