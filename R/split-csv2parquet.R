@@ -28,7 +28,8 @@ if (type == 'demographics') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name, ext = 'csv'),
 							 col_types = schema(MRN = string()),
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		rename_with(tolower) |>
 		write_dataset(
 			path = pq_path,
@@ -44,7 +45,8 @@ if (type == 'diagnosis') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -60,7 +62,8 @@ if (type == 'labs') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -76,7 +79,8 @@ if (type == 'medications') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -92,7 +96,8 @@ if (type == 'notes') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -108,7 +113,8 @@ if (type == 'procedure-dates') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -124,7 +130,8 @@ if (type == 'procedure-reports') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -141,15 +148,7 @@ if (type == 'visits') {
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
 							 format = 'csv',
-							 schema = Schema(
-							 	record_id = int32(),
-							 	encounter_id = int32(),
-							 	visit_location = utf8(),
-							 	visit_type = utf8(),
-							 	visit_discharge = utf8(),
-							 	start_date = timestamp(),
-							 	end_date = timestamp()
-							 )) |>
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
@@ -165,7 +164,8 @@ if (type == 'vitals') {
 	file_name <- type
 	open_dataset(fs::path(csv_path, file_name),
 							 partitioning = 'year',
-							 format = 'csv') |>
+							 format = 'csv',
+							 unify_schemas = TRUE) |>
 		group_by(year) |>
 		write_dataset(
 			path = fs::path(pq_path, file_name),
