@@ -77,27 +77,19 @@ cat("\nWill now change ICD9 to ICD10 codes.\n")
 outputData <-
 	vroom::vroom(
 		file = inputFile,
-		col_names = c('record_id', 'redcap_instrument', 'redcap_repeat', 'encounter_id', 'date', 'icd_code'),
-		col_select = c('record_id', 'encounter_id', 'date', 'icd_code'),
+		col_names = c('RECORD_ID', 'redcap_repeat_instrument', 'redcap_repeat_instance', 'ENCOUNTER_ID', 'START_DATE', 'ICD_CODE', 'CODING_SYSTEM'),
+		col_select = c('RECORD_ID', 'ENCOUNTER_ID', 'START_DATE', 'ICD_CODE', 'CODING_SYSTEM'),
 		skip = min(chunk, na.rm = TRUE),
 		n_max = length(chunk)
 	) |>
-	# Identify if ICD 9 or 10 code
-	dplyr::mutate(icd9 = grepl('ICD9CM', icd_code)) |>
-	dplyr::mutate(icd10 = !icd9) |>
-	# Convert if possible (either NA, single code, or multicode c- commas)
-	dplyr::mutate(icd_code = if_else(icd9, substr(
-		icd_code, start = 8, stop = nchar(icd_code)
-	), icd_code)) |>
-	dplyr::mutate(icd_code = if_else(icd9, touch::icd_map(icd_code, from = 9, to = 10, decimal = TRUE, nomatch = NA), icd_code)) |>
-	dplyr::mutate(icd_code = gsub(',', '|', icd_code)) |>
-	dplyr::select(-icd9, -icd10)
+	# Convert to ICD10 code if is in ICD9
+	dplyr::mutate(ICD_CODE = if_else(CODING_SYSTEM == 'ICD9CM', touch::icd_map(ICD_CODE, from = 9, to = 10, decimal = TRUE, nomatch = NA), ICD_CODE))
 cat('Number of rows in file is', nrow(outputData), '\n')
 
 # Generate output file
 if (!fs::file_exists(outputFile)) {
 	col_names <-
-		c('record_id', 'encounter_id', 'date', 'icd_code') |>
+		c('RECORD_ID', 'ENCOUNTER_ID', 'START_DATE', 'ICD_CODE') |>
 		paste0(collapse = ',')
 	readr::write_lines(col_names, file = outputFile)
 }
