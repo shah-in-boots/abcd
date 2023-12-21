@@ -32,8 +32,8 @@ library(touch)
 
 # Paths
 home <- fs::path_expand('~')
-main <- fs::path('projects', 'cbcd')
-ccts <- fs::path(home, main, 'data', 'ccts')
+project <- fs::path('projects', 'cbcd')
+ccts <- fs::path(home, 'ccts', 'emr')
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -51,7 +51,7 @@ cat('Attempt parallelization with', nCPU, 'cores\n')
 cat('\nHandling the inputs & outputs:\n')
 inputFile <- fs::path(ccts, 'raw', 'diagnosis-raw', ext = 'csv')
 cat('\tWill split up the file named...', inputFile, '\n')
-outputFile <- fs::path(ccts, 'raw', paste0('diagnosis-proc-', taskNumber), ext = 'csv')
+outputFile <- fs::path(ccts, 'raw', 'diagnosis', ext = 'csv')
 cat('\tWill then write to...', outputFile, '\n')
 
 # Get lines and line numbers to help with batching

@@ -33,7 +33,8 @@ The data is stored in...
 ...and in a CSV format. These have not been processed, but are first part of the pipeline to organize the data. This data is broken up into several types, which are explained below. For our usage, we rename them for simplicity. 
 
 - demographics.csv = REDCap and MRN key data, along with baseline intake information
-- diagnosis.csv = diagnosis code which may be in ICD9 or ICD10 format
+- diagnosis-raw.csv = diagnosis code which may be in ICD9 or ICD10 format
+- diagnosis.csv = diagnosis code which have been cleaned such that everything is now in ICD10 format
 - labs.csv = lab type and lab value (+/- units)
 - medications.csv = medication, dosage, unit, route
 - notes.csv = clinical notes from ALL encounters, including non-physician documentation (very large file)

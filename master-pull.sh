@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=2-14
+#SBATCH --array=1-14
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -23,7 +23,7 @@ module load R/4.2.1-foss-2022a
 # Years setup (2010 to 2023 is 14...)
 years=($(seq 2010 2023))
 year=${years[$SLURM_ARRAY_TASK_ID - 1]}
-printf "Filtering out data from: $year"
+printf "Filtering out data from: $year\n"
 
 # Subcript -- copy-mrn2clinical.R
 #
@@ -33,6 +33,6 @@ printf "Filtering out data from: $year"
 # 	YEAR (works as a batching variable)
 # 	OUTPUT (folder for where data should be placed)
 # 	FORMAT (format of saving files, e.g parquet, CSV)
-Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/afeqt/emr/ parquet
+Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/cbcd/afeqt/emr/ parquet
 
 # Will repeat for ECG data
