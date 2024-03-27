@@ -1,3 +1,2 @@
-find_data_folder <- function() {
-	fs::path(here::here(), 'data')
-}
+tidymodels::tidymodels_prefer()
+conflicted::conflict_prefer_all("dplyr", "purrr")

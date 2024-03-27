@@ -1,6 +1,16 @@
 library(targets)
 library(tarchetypes)
+
+# Cluster computing
 library(crew)
+library(crew.cluster)
+controller <- crew_controller_slurm(
+  workers = 2L,
+  host = "ashah282@aws.acer.uic.edu",
+  tasks_max = 2,
+  seconds_idle = 30,
+  script_lines = "module load R/4.2.1-foss-2022a"
+)
 
 # Options
 tar_option_set(
@@ -22,51 +32,19 @@ tar_option_set(
     "tidymodels",
     "reticulate", "tensorflow", "tfdatasets", "keras",
     # Presenting
-    "knitr", "gt", "gtsummary", "glue",
-    "ggdag", "ggsurvfit", "ggsci",
-    # Validating
-    "labelled", "pointblank", "naniar",
+    "knitr", "gt", "gtsummary", "glue", "rmarkdown",
     # Personal
     "vlndr", "shiva", "card"
-  )
+  ),
+  controller = controller
 )
 
-# tar_make_clustermq() configuration (okay to leave alone):
-options(clustermq.scheduler = "multicore")
-
-# tar_make_future() configuration (okay to leave alone):
-future::plan(future.callr::callr)
-
 # Scripts
-source("R/target-options.R")
-source("R/target-intake.R")
-source("R/target-tidy.R")
 
 # Targets
 list(
+  tar_target(cbcd_data_loc, "~/data/cbcd"),
+  tar_target(aflubber_data_loc, "~/data/aflubber"),
+  tar_target(genetics_data_loc, "~/data/genetics")
 
-  # General ----
-  tar_target(data_loc, fs::path(here::here(), "data")),
-  tar_target(afib_data_loc, fs::path(data_loc, "ccts", "afib")),
-
-  tar_target(
-    cardiac_medications, # Simplified CV meds
-    read_in_cardiac_medications(dataFolder = afib_data_loc,
-                           regexFile = "regex-meds.txt")
-  ),
-
-  # AFIB ----
-
-  tar_target(afib_ids, read_in_redcap_ids(dataFolder = afib_data_loc)),
-
-  tar_target(afib_medications, tidy_afib_medications(meds = cardiac_medications)),
-
-  tar_target(
-    afib_diagnoses, # Diagnoses converted to comorbidities at time point
-    read_in_afib_diagnoses(dataFolder = afib_data_loc)
-  ),
-
-  tar_quarto(sdoh_slides, "output/slides-sdoh.qmd")
-
-  # WES ----
 )
