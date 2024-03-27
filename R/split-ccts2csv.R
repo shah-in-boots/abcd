@@ -273,11 +273,11 @@ if (TRUE) {
 				visit_location = 'ENCOUNTER_TYPE',
 				visit_type = 'VISIT_TYPE',
 				visit_discharge = 'DISCHARGE_DISPOSITION',
-				visit_start_date = 'VISIT_START_DATE',
-				visit_end_date = 'VISIT_END_DATE'
+				start_date = 'VISIT_START_DATE',
+				end_date = 'VISIT_END_DATE'
 			)
 		) |>
-		dplyr::filter(year == clock::get_year(visit_start_date))
+		dplyr::filter(year == clock::get_year(start_date))
 	cat('Read in', dataFile, 'and filtered down by year\n')
 
 	# Output paths

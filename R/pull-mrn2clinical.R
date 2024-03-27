@@ -14,7 +14,7 @@
 # 	OUTPUT <folder>
 # 		Name of path and folder name to put findings
 #			Makes a subset of data from the master dataset
-#			Example: ~/data/afeqt/emr/*
+#			Example: ~/data/cbcd/afeqt/*
 #		FORMAT <character>
 #			Name of type of format to output
 #			Likely will be placed within "years" of the data being obtained

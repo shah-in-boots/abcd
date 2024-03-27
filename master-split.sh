@@ -1,11 +1,11 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=visits2parquet
+#SBATCH --job-name=notes2parquet
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
-#SBATCH --array=1-10
+#SBATCH --array=5
 #SBATCH --error=slurm-%A-%a.err
 #SBATCH --output=slurm-%A-%a.out
 #SBATCH --mail-user=ashah282@uic.edu
@@ -32,9 +32,15 @@ module load R/4.2.1-foss-2022a
 # The second section can be used by SLURM by splitting by year
 # The third section can be used by SLURM by splitting on topic
 
+# There are three choices: 
+# 	1. "prepare" = take raw <CSV> data and prepares it for splitting
+# 	2. "split" = takes raw <CSV> data and splits it by year
+# 	3. "convert" = takes the split CSV data and converts to <PARQUET>
+
+task="convert"
 
 # 1 = PREPARE RAW
-if true
+if [[ $task == "prepare" ]]
 then
 
 	# Slurm settings above will be used to help chunk the data
@@ -48,7 +54,7 @@ then
 fi
 
 # 2 = SPLIT CSV
-if false
+if [[ $task == "split" ]]
 then 
 
 	# Years setup (2010 to 2023 is 14...)
@@ -63,20 +69,20 @@ then
 fi
 
 # 3 = CSV TO PARQUET
-if false 
+if [[ $task == "convert" ]]
 then
 
 	# Data types below = 9 overall
 	types=(
-		'demographics'
-		'diagnosis'
-		'labs'
-		'medications'
-		'notes'
-		'procedure-dates'
-		'procedure-reports'
-		'visits'
-		'vitals'
+		'demographics' # 1
+		'diagnosis' # 2
+		'labs' # 3
+		'medications' # 4
+		'notes' # 5
+		'procedure-dates' # 6
+		'procedure-reports' # 7
+		'visits' # 8
+		'vitals' # 9
 	)
 
 	# Type is the part of the script that will be analyzed
