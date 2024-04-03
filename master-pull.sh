@@ -33,6 +33,6 @@ printf "Filtering out data from: $year\n"
 # 	YEAR (works as a batching variable)
 # 	OUTPUT (folder for where data should be placed)
 # 	FORMAT (format of saving files, e.g parquet, CSV)
-Rscript R/pull-mrn2clinical.R mrn-afeqt.txt $year ~/data/cbcd/afeqt/ parquet
+Rscript R/pull-mrn2clinical.R mrn-af-registry.txt $year ~/data/cbcd/afeqt/ parquet
 
 # Will repeat for ECG data
