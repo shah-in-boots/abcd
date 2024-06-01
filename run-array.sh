@@ -14,6 +14,6 @@
 module load R/4.2.1-foss-2022a
 #Rscript R/find-mrnByIcdDx.R icd-hf.txt mrn-hf.txt $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
 #Rscript R/convert-icdCodes.R $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
-
-Rscript R/copy-mrn2wfdb.R mrn-wes.csv wes $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
+#Rscript R/copy-mrn2wfdb.R mrn-wes.csv wes $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
+Rscript R/copy-mrn2wfdb.R miles-crossover-patients.csv $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_TASK_COUNT
 

@@ -60,7 +60,7 @@ cat("Attempt parallelization with", nCPU, "cores\n")
 cat("\nPreparing input and output data:\n\n")
 mrnData <-
 	fs::path(home, main, mrnFile) |>
-	vroom::vroom() |>
+	vroom::vroom(delim = ",") |>
 	dplyr::select(mrn) |>
 	dplyr::distinct() |>
 	janitor::clean_names() |>

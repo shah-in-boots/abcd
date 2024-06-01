@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# `copy-mrn2clinical.R` uses MRNs to subset the clinical data
+# `pull-mrn2clinical.R` uses MRNs to subset the clinical data
 #
 # Arguments [4]:
 # 	MRN <file>
