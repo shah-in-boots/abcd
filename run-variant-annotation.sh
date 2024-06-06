@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=wesWFDBfiles
+#SBATCH --job-name=testVariantAnnotation
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2     # Number of cores per task
@@ -16,6 +16,10 @@
 #
 # `code/annotate-vcf2vep.sh`
 #
+# ARGUMENTS:
+#   --VCF_files = space separated string of VCF file names <path>
+#   --output-dir = directory for where annotations should be written <path>
+#
 # PITFALLS:
 # 	VCF files cannot have spaces in their name (WILL FAIL)
 
@@ -25,11 +29,11 @@ module load SAMtools/1.15.1-GCC-11.2.0
 module load ensembl-vep/v111
 
 # Name the directory variables of interest (input and output)
-dirVCF="~/data/uic/genetics/vcf"
-dirOutput="~/data/uic/genetics/vcf/vep/no_lof"
+dirVCF="/shared/home/ashah282/data/uic/vcf"
+dir_output="/shared/home/ashah282/data/uic/vep/no_lof"
 
 # Create the output directory if it doesn't exist
-mkdir -p "$dirOutput"
+mkdir -p "$dir_output"
 
 # Total number of batches and batch IDs from SLURM
 n=$SLURM_ARRAY_TASK_COUNT
@@ -57,9 +61,10 @@ fi
 batchFiles=("${allVCF[@]:startIndex:endIndex-startIndex}")
 
 # Save teh batch files as an environment variable to pass along
+# This must be a space-separated string file
 VCF_files="${batchFiles[@]}"
 
 # Run the annotation batch command here
-./code/annotate-vcf2vep.sh --vcf-files "$VCF_files" --output-dir "$dirOutput"
+./code/annotate-vcf2vep.sh --vcf-files "$VCF_files" --output-dir "$dir_output"
 
 echo "Batch $(($i + 1)) of $n is completed."

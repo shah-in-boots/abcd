@@ -46,7 +46,7 @@ for file in "${VCF_array[@]}"; do
 	# Run VEP pipeline
 	# Uses just 2 CPUs to allow for lower SLURM costs and more efficient batching
 	# Convert with LOFTEE in this example
-	apptainer exec /shared/software/EasyBuild/modules/all/ensembl-vep/ensembl-vep_latest.sif vep -i $file -o "$outputFile" --verbose --fork 2 --offline --no_stats --polyphen s --sift s --symbol --show_ref_allele --plugin Lof,loftee_path:/shared/home/ashah282/tools/loftee/,human_ancestor_fa:false --dir_plugin /shared/home/ashah282/tools/loftee/
+	apptainer exec /shared/software/EasyBuild/modules/all/ensembl-vep/ensembl-vep_latest.sif vep -i "$file" -o "$outputFile" --verbose --fork 2 --offline --no_stats --polyphen s --sift s --symbol --show_ref_allele --plugin Lof,loftee_path:/shared/home/ashah282/tools/loftee/,human_ancestor_fa:false --dir_plugin /shared/home/ashah282/tools/loftee/
 
 	echo "Annotation of $file completed, and output written to $outputFile."
 
