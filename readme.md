@@ -1,4 +1,7 @@
-# Computational Biorepository for Cardiovascular Disease
+# Automated Biorepository for Cardiovascular Disease
+
+Last Update: 2024-06-06  
+Contact: ashah282@uic.edu  
 
 This serves as a code-based hub for the EMR-based cardiovascular data from the University of Illinois Chicago as part of an IRB-approved, HIPAA compliant registry. No data is available on this site or on Github directly. However, the code that could generate or organize the data is available and intended to be shared by any co-authors or collaborators.
 
@@ -16,7 +19,7 @@ AWS ID = CARDIO_DARBAR
 
 1. File transfer from the Clinical Data Warehouse to the Cluster
 	a. Download from the UIC Box folder (or however CCTS delivers it) the respective data pulls on all EMR data-types. This must be done on a local computer.
-	a. SSH the *.zip files to the cluster under 'cbcd/data/raw/*'. Be careful not to replace old, potentially important, files based on the name. 
+	a. SSH the *.zip files to the cluster under 'abcd/data/raw/*'. Be careful not to replace old, potentially important, files based on the name. 
 	a. Unzip the files on the remote server (cluster), and rename them to the nomenclature listed below. This is key so other code can utilize the common names for retrieval/manipulation.
 1. Partition the CSV files into an out-of-memory friendly format for analysis
 	a. Using the `partition-ccts.sh` script located in the project directory, send a batch job to start processing the files.
@@ -28,7 +31,7 @@ The data is rescued from the EMR through a CDW pull from the UIC CCTS. This proc
 
 The data is stored in... 
 
-~/project/cbcd/data/raw/*
+~/data/uic/raw
 
 ...and in a CSV format. These have not been processed, but are first part of the pipeline to organize the data. This data is broken up into several types, which are explained below. For our usage, we rename them for simplicity. 
 
@@ -45,9 +48,9 @@ The data is stored in...
 
 These raw files need to be managed in a referential way, e.g. database, SQL, or potential parquet format (via Apache Arrow). The current infrastructure is oriented around parquet for ease of manipulation within R (and other languages, including Python). 
 
-To convert a CSV file to PARQUET, use the following script located in the root folder for the **cbcd** project
+To convert a CSV file to PARQUET, use the following script located in the root folder for the **abcd** project
 
-XXX
+`master-split.sh`
 
 This contains the appropriate variables that can be manipulated to write out files in parquet format. The current structure is a HIVE style using the YEAR and MONTH of the relevant date for the data, which will lead to a reasonable file size.
 
@@ -87,7 +90,7 @@ Identifying ECGs based on a diagnosis (e.g. AF), which creates and manipulates a
 find-wfdb2diagnosis.R
 match-diagnosis2mrn.R
 
-## Important Workflows
+# Important Workflows
 
 ### Creating MRN-based datasets
 
