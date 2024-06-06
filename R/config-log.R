@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# The `config-log.R` updates the log files throughout
+# The `config-log.R` updates the log files throughout the ECG datasets
 
 library(fs)
 library(dplyr)
