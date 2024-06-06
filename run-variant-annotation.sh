@@ -65,6 +65,6 @@ batchFiles=("${allVCF[@]:startIndex:endIndex-startIndex}")
 VCF_files="${batchFiles[@]}"
 
 # Run the annotation batch command here
-./code/annotate-vcf2vep.sh --vcf-files "$VCF_files" --output-dir "$dir_output"
+code/annotate-vcf2vep.sh --vcf-files "$VCF_files" --output-dir "$dir_output"
 
 echo "Batch $(($i + 1)) of $n is completed."
