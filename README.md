@@ -13,6 +13,8 @@ For inquiries, can reach out to members of the Darbar lab for further informatio
 
 AWS ID = CARDIO_DARBAR
 
+# Datasets
+
 ## Clinical data
 
 **Pipeline**:
@@ -89,6 +91,24 @@ Identifying ECGs based on a diagnosis (e.g. AF), which creates and manipulates a
 
 find-wfdb2diagnosis.R
 match-diagnosis2mrn.R
+
+## Genetics
+
+There are VCF files and an pipeline located at...
+
+`~/data/uic/vcf`  
+
+These folders contain PHI (by definition) of WES/WGS sequenced VCF files that have been aligned but not yet filtered or annotated. 
+The annotations will generally be located below:
+
+`~/data/uic/vep`  
+
+Subfolders in this directory house the type of annotations that were called, along with potentially filtered data (e.g. for certain arrhythmia genes).
+
+The pipeline to generally do so is located in:
+
+`./run-variant-annotation.sh`  
+`./code/annotate-vcf2vep.sh`
 
 # Important Workflows
 
