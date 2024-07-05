@@ -33,6 +33,8 @@ printf "Filtering out data from: $year\n"
 # 	YEAR (works as a batching variable)
 # 	OUTPUT (folder for where data should be placed)
 # 	FORMAT (format of saving files, e.g parquet, CSV)
+# The only variable necessarily needs to be changed is...
+# 	the MRN file location and the data output
 Rscript R/pull-mrn2clinical.R mrn-crossover.txt $year ~/data/cbcd/crossover/ parquet
 
 # Will repeat for ECG data
