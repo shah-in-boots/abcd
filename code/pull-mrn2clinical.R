@@ -5,16 +5,16 @@
 # Arguments [4]:
 # 	MRN <file>
 # 		Path to list of MRNs file and name of it
-# 		Assumes that path is from project home (e.g. ~/projects/cbcd/.)
+# 		Assumes that path is from project home (e.g. ~/projects/abcd/.)
 # 		Expects file to be a list with an MRN on each line
 # 	YEAR <character>
 # 		Folder name to evaluate
 # 		In this case, all the CCTS is split into folders by year
-# 		Expected to be within ~/ccts/emr/pq/*
+# 		Expected to be within ~/data/uic/emr/pq/*
 # 	OUTPUT <folder>
 # 		Name of path and folder name to put findings
 #			Makes a subset of data from the master dataset
-#			Example: ~/data/cbcd/afeqt/*
+#			Example: ~/data/abcd/afeqt/*
 #		FORMAT <character>
 #			Name of type of format to output
 #			Likely will be placed within "years" of the data being obtained
@@ -47,8 +47,8 @@ library(arrow)
 
 # Paths
 home <- fs::path_expand('~')
-project <- fs::path(home, 'projects', 'cbcd')
-ccts <- fs::path(home, 'ccts', 'emr')
+project <- fs::path(home, 'projects', 'abcd')
+uic <- fs::path(home, "data", "uic", "cdw")
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -79,7 +79,7 @@ cat('\tThere are', length(mrnData), 'MRNs to be evaluated\n')
 
 # Get record IDs to help match on key
 redcap <-
-	fs::path(ccts, 'pq', 'demographics-0.parquet') |>
+	fs::path(uic, 'pq', 'demographics-0.parquet') |>
 	arrow::read_parquet() |>
 	#dplyr::mutate(mrn = stringr::str_pad(mrn, width = 9, pad = '0'))
 	dplyr::mutate(mrn = as.numeric(mrn))
@@ -100,7 +100,7 @@ cat('\nNow will go through individual data types by individual files\n\n')
 
 fileType <- 'demographics'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', paste0(fileType, '-0.parquet')),
+arrow::open_dataset(fs::path(uic, 'pq', paste0(fileType, '-0.parquet')),
 										format = 'parquet') |>
 	dplyr::filter(record_id %in% key) |>
 	arrow::write_dataset(
@@ -111,7 +111,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', paste0(fileType, '-0.parquet')),
 
 fileType <- 'diagnosis'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -124,7 +124,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'labs'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -137,7 +137,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'medications'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -151,7 +151,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'notes'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -164,7 +164,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'procedure-dates'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -178,7 +178,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'procedure-reports'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -191,7 +191,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'visits'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>
@@ -204,7 +204,7 @@ arrow::open_dataset(fs::path(ccts, 'pq', fileType),
 
 fileType <- 'vitals'
 cat('\tAnalyzing ', fileType, '\n')
-arrow::open_dataset(fs::path(ccts, 'pq', fileType), 
+arrow::open_dataset(fs::path(uic, 'pq', fileType), 
 										format = 'parquet', 
 										unify_schemas = TRUE) |>
 	dplyr::filter(year == yearName) |>

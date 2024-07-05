@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #SBATCH --partition=cpu-t3
-#SBATCH --job-name=pullAFEQT
+#SBATCH --job-name=chemotherapy
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=2		# Number of cores per task
@@ -35,6 +35,6 @@ printf "Filtering out data from: $year\n"
 # 	FORMAT (format of saving files, e.g parquet, CSV)
 # The only variable necessarily needs to be changed is...
 # 	the MRN file location and the data output
-Rscript R/pull-mrn2clinical.R mrn-crossover.txt $year ~/data/cbcd/crossover/ parquet
+Rscript code/pull-mrn2clinical.R mrn-ctrcd.txt $year ~/data/abcd/ctrcd/ csv
 
 # Will repeat for ECG data
