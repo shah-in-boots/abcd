@@ -46,8 +46,8 @@ library(stringr)
 library(arrow)
 
 # Paths
-home <- fs::path_expand('~')
-project <- fs::path(home, 'projects', 'abcd')
+home <- fs::path("/", "shared", "projects", "cardio_darbar", "common")
+project <- fs::path(home, "software", "abcd")
 uic <- fs::path(home, "data", "uic", "cdw")
 
 # Handle arguments

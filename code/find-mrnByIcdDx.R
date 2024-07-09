@@ -10,11 +10,11 @@
 # Arguments [4]:
 # 	ICD CODES <file>
 # 		Path to file with each line containing ICD10 codes
-# 		Assumes that path is from project home (e.g. ~/projects/cbcd/.)
+# 		Assumes that path is from project home (e.g. */common/software/abcd/.)
 # 		Each line is an ICD10 code that is being searched for
 # 	OUTPUT <file>
 # 		Path to output file and name of it
-# 		Assumes that path is from project home (e.g. ~/projects/cbcd/.)
+# 		Assumes that path is from project home (e.g. */common/software/abcd/.)
 # 		If already exists, will append to it
 # 	SLURM_ARRAY_JOB_ID <integer>
 # 		Task Number to pass forward for batching
@@ -41,9 +41,13 @@ library(foreach)
 library(icd)
 
 # Paths
-home <- fs::path_expand('~')
-main <- fs::path('projects', 'cbcd')
-ccts <- fs::path(home, main, 'data', 'ccts')
+# 	home = common project folder for software and data
+# 	project = where the MRN list is held
+# 	uic = where clinical data is held from the CDW/CCTS
+home <- fs::path("/", "shared", "projects", "cardio_darbar", "common")
+project <- fs::path(home, "software", "abcd")
+uic <- fs::path(home, "data", "uic", "cdw")
+
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -66,14 +70,14 @@ cat('Attempt parallelization with', nCPU, 'cores\n')
 cat('\nHandling the inputs & outputs:\n')
 
 # ICD codes
-icdCodes <- readr::read_lines(fs::path(home, main, icdArg))
+icdCodes <- readr::read_lines(fs::path(project, icdArg))
 cat('\tHave', length(icdCodes), 'ICD codes to evaluate\n')
 
 # Input file is the diagnosis file of interest
-inputFile <- fs::path(ccts, 'raw', 'diagnosis', ext = 'csv')
+inputFile <- fs::path(uic, 'raw', 'diagnosis', ext = 'csv')
 
 # Output file
-outputFile <- fs::path(home, main, outputArg)
+outputFile <- fs::path(project, outputArg)
 if (!fs::file_exists(outputFile)) {
 	fs::file_create(outputFile)
 	cat('\tCreating output file at...', outputFile, '\n')
@@ -127,7 +131,7 @@ cat("\tDiscovered", length(ids), "possible MRNs\n")
 
 # Get MRNs from IDS
 redcap <-
-	fs::path(ccts, 'raw', 'redcap-ids.csv') |>
+	fs::path(uic, 'raw', 'redcap-ids.csv') |>
 	vroom::vroom()
 
 # Filter to relevant data
