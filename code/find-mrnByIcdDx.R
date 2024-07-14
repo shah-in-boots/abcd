@@ -48,6 +48,9 @@ home <- fs::path("/", "shared", "projects", "cardio_darbar", "common")
 project <- fs::path(home, "software", "abcd")
 uic <- fs::path(home, "data", "uic", "cdw")
 
+# Edits were made using latest versions of required libraries installed in local server library
+
+#**May need to change inputFile path / file name (line 80)
 
 # Handle arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -111,15 +114,19 @@ cat("\nNow time to search through data chunks:\n")
 outputData <-
 	vroom::vroom(
 		file = inputFile,
-		delim = ',',
+		# Removed delim option to avoid error
 		col_names = c('record_id', 'encounter_id', 'date', 'icd_code'),
 		skip = min(chunk, na.rm = TRUE),
 		n_max = length(chunk)
 	)
 
-n <- length(outputData)
+n <- nrow(outputData)
 cat("\tFound out will be analyzing", n, "rows\n")
-ids <- foreach(i = 1:n, .combine = 'c', .errorhandling = 'remove') %dopar% {
+
+# Changed iteration range to be thru icdCodes, rather than range of outputData
+a <- lenth(icdCodes)
+
+ids <- foreach(i = 1:a, .combine = 'c', .errorhandling = 'remove') %dopar% {
 
 	# Flip through ICD diagnoses
 	outputData |>
@@ -136,7 +143,8 @@ redcap <-
 
 # Filter to relevant data
 mrn <-
-	redcap[which(ids %in% redcap$record_id), ] |>
+	#Flipped %in% arguments to find indices of redcap$record_id:
+	redcap[which(redcap$record_id %in% ids), ] |>
 	dplyr::pull(mrn) |>
 	as.character()
 
