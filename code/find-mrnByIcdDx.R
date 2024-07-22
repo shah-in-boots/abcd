@@ -25,7 +25,7 @@
 # Output [1]:
 # 	TXT <file>
 # 		Creates a TEXT file with 1 MRN per LINE
-# 
+#
 # Last Updated: 07/22/24 @ Anish S. Shah
 
 # Setup ----
@@ -40,7 +40,6 @@ library(tibble)
 library(vroom)
 library(parallel)
 library(foreach)
-library(icd)
 
 # Paths
 # 	home = common project folder for software and data
@@ -133,16 +132,14 @@ ids <- foreach(i = 1:numCodes, .combine = 'c', .errorhandling = 'remove') %dopar
 
 	# Flip through ICD diagnoses
 	outputData |>
-		dplyr::filter(stringr::str_detect(icdCodes[i], icd_code)) |>
+		dplyr::filter(stringr::str_detect(icd_code, icdCodes[i])) |>
 		dplyr::pull(record_id)
 
 }
+
 cat("\tDiscovered", length(ids), "possible MRNs\n")
 
 # Get MRNs from IDS
-# This is in the demographics file
-# 	Previously this was hte "redcap-ids.csv" file
-
 redcap <-
 	fs::path(uic, 'raw', 'demographics.csv') |>
 	vroom::vroom() |>
