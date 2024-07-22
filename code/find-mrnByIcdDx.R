@@ -25,6 +25,8 @@
 # Output [1]:
 # 	TXT <file>
 # 		Creates a TEXT file with 1 MRN per LINE
+# 
+# Last Updated: 07/22/24 @ Anish S. Shah
 
 # Setup ----
 
@@ -138,9 +140,13 @@ ids <- foreach(i = 1:numCodes, .combine = 'c', .errorhandling = 'remove') %dopar
 cat("\tDiscovered", length(ids), "possible MRNs\n")
 
 # Get MRNs from IDS
+# This is in the demographics file
+# 	Previously this was hte "redcap-ids.csv" file
+
 redcap <-
-	fs::path(uic, 'raw', 'redcap-ids.csv') |>
-	vroom::vroom()
+	fs::path(uic, 'raw', 'demographics.csv') |>
+	vroom::vroom() |>
+	janitor::clean_names()
 
 # Filter to relevant data
 mrn <-
