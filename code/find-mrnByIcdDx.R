@@ -123,10 +123,11 @@ outputData <-
 n <- nrow(outputData)
 cat("\tFound out will be analyzing", n, "rows\n")
 
-# Changed iteration range to be thru icdCodes, rather than range of outputData
-a <- lenth(icdCodes)
+# Changed iteration range to be thru icdCodes
+# Previous version was through range of outputData
+numCodes <- length(icdCodes)
 
-ids <- foreach(i = 1:a, .combine = 'c', .errorhandling = 'remove') %dopar% {
+ids <- foreach(i = 1:numCodes, .combine = 'c', .errorhandling = 'remove') %dopar% {
 
 	# Flip through ICD diagnoses
 	outputData |>

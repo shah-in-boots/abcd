@@ -31,7 +31,7 @@ library(foreach)
 library(touch)
 
 # Paths
-home <- fs::path_expand("/", "shared", "projects", "cardio_darbar", "common")
+home <- fs::path("/", "shared", "projects", "cardio_darbar", "common")
 project <- fs::path("software", "abcd")
 uic <- fs::path(home, "data", "uic", "cdw")
 
