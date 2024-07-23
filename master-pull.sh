@@ -35,6 +35,6 @@ printf "Filtering out data from: $year\n"
 # 	FORMAT (format of saving files, e.g parquet, CSV)
 # The only variable necessarily needs to be changed is...
 # 	the MRN file location and the data output
-Rscript /shared/projects/cardio_darbar/common/software/abcd/code/pull-mrn2clinical.R mrn-ctrcd.txt $year /shared/projects/cardio_darbar/common/data/cohorts/ctrcd/ parquet
+Rscript /shared/projects/cardio_darbar/common/software/abcd/code/pull-mrn2clinical.R mrn-dm.txt $year /shared/projects/cardio_darbar/common/data/cohorts/dm_afib/ parquet
 
 # Will repeat for ECG data

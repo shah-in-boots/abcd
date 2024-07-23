@@ -5,7 +5,7 @@
 # Need to read in individual file types and clean them
 # Each file will be specific in how we want to "clean" the data
 
-read_cbcd_demographics <- function(file_dir) {
+read_abcd_demographics <- function(file_dir) {
 	
 	# Read in data for demographics
 	# The MRN will clash unless they are all numeric
@@ -27,7 +27,7 @@ read_cbcd_demographics <- function(file_dir) {
 	demo
 }
 
-read_cbcd_diagnosis <- function(file_dir) {
+read_abcd_diagnosis <- function(file_dir) {
 	
 	# Read in data for diagnosis
 	dx <-
@@ -61,7 +61,7 @@ read_cbcd_diagnosis <- function(file_dir) {
 	dat
 }
 
-read_cbcd_labs <- function(file_dir) {
+read_abcd_labs <- function(file_dir) {
 	
 	# Read in data for lab results using arrow package
 	
@@ -156,7 +156,7 @@ read_cbcd_labs <- function(file_dir) {
 	
 }
 
-read_cbcd_medications <- function(file_dir, med_file) {
+read_abcd_medications <- function(file_dir, med_file) {
 	
 	# Select all the cardiac medications only
 	regMeds <- 
@@ -188,7 +188,7 @@ read_cbcd_medications <- function(file_dir, med_file) {
 	
 }
 
-read_cbcd_notes <- function(file_dir) {
+read_abcd_notes <- function(file_dir) {
 	
 	# Read in data for notes
 	notes <-
@@ -208,7 +208,7 @@ read_cbcd_notes <- function(file_dir) {
 	
 }
 
-read_cbcd_procedure_dates <- function(file_dir) {
+read_abcd_procedure_dates <- function(file_dir) {
 	
 	icd9 <- card::procedure_codes('icd9', 2014)
 	icd10 <- card::procedure_codes('icd10', 2023)
@@ -276,7 +276,7 @@ read_cbcd_procedure_dates <- function(file_dir) {
 	
 }
 
-read_cbcd_procedure_reports <- function(file_dir) {
+read_abcd_procedure_reports <- function(file_dir) {
 	
 	# Read in data for procedure-reports
 	procedure_reports <-
@@ -290,7 +290,7 @@ read_cbcd_procedure_reports <- function(file_dir) {
 	
 }
 
-read_cbcd_visits <- function(file_dir) {
+read_abcd_visits <- function(file_dir) {
 	
 	# Issue in this visits data
 	# Has both "start date" and "visit start date" as names for columns
@@ -305,7 +305,7 @@ read_cbcd_visits <- function(file_dir) {
 	
 }
 
-read_cbcd_vitals <- function(file_dir) {
+read_abcd_vitals <- function(file_dir) {
 	
 	# Read in data for vitals
 	vitals <-
