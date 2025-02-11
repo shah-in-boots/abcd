@@ -5,8 +5,8 @@ library(readr)
 library(fs)
 
 # Paths
-home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd")
+home <- fs::path('/mmfs1','projects','cardio_darbar_chi') # correcting path due to strange link functioning
+main <- fs::path("common") # correcting path
 
 # MUSE ----
 
