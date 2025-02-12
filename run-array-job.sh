@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --partition=cpu-t3
+#SBATCH --partition=batch
 #SBATCH --job-name=wesWFDBfiles
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
