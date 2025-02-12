@@ -29,7 +29,7 @@ logFile <- fs::path(muse, 'muse', ext = 'log')
 
 # All files in each folder
 museList <-
-	fs::dir_ls(muse, recurse = 1, type = "file", glob = "*.xml") |>
+	list.files(path = muse, pattern = '\\.xml$', full.names = TRUE, recursive = TRUE, include.dirs = TRUE) |> # changed command to list files due to error
 	na.omit() |>
 	unique()
 n <- length(museList)
