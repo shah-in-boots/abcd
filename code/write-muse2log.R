@@ -15,8 +15,8 @@ library(readr)
 library(foreach)
 
 # Paths
-home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd")
+home <- fs::path('/mmfs1','projects','cardio_darbar_chi') # correcting path due to strange link functioning
+main <- fs::path("common") # correcting path
 muse <- fs::path(home, main, "data", "muse")
 
 # Setup parallelization
@@ -29,7 +29,7 @@ logFile <- fs::path(muse, 'muse', ext = 'log')
 
 # All files in each folder
 museList <-
-	fs::dir_ls(muse, recurse = 1, type = "file", glob = "*.xml") |>
+	list.files(path = muse, pattern = '\\.xml$', full.names = TRUE, recursive = TRUE, include.dirs = TRUE) |> # changed command to list files due to error
 	na.omit() |>
 	unique()
 n <- length(museList)
