@@ -114,11 +114,10 @@ convertedFiles <-
 		}
 
 		EGM::write_wfdb(
-			data = sig,
+			data = ecg,
 			type = "muse",
 			record = fn,
 			record_dir = yearFolder,
-			header = hea
 		)
 
 		vroom::vroom_write_lines(fn, file = logFile, append = TRUE)
