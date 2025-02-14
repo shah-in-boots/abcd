@@ -10,12 +10,13 @@
 cat("Setup for processing of XML into WFDB files:\n\n")
 
 # Libraries
-library(shiva)
+library(EGM)
 library(vroom)
 library(fs)
 library(foreach)
 library(parallel)
 library(doParallel)
+library(clock)
 
 # Arguments
 # 	1st = SLURM_ARRAY_JOB_ID
@@ -31,15 +32,15 @@ doParallel::registerDoParallel(cores = nCPU)
 cat("\tAttempting parallelization with", nCPU, "cores\n")
 
 # Paths
-home <- fs::path_expand('~')
-main <- fs::path('projects', 'cbcd')
-muse <- fs::path(home, main, 'data', 'muse')
+home <- fs::path('/mmfs1','projects','cardio_darbar_chi') # correcting path
+main <- fs::path("common") # correcting path
+muse <- fs::path(home, main, "data", "muse")
 wfdb <- fs::path(home, main, 'data', 'wfdb')
 
 # Batch Preparation ----
 
 # Number of files to be split into ~ equivalent parts
-inputData <- vroom::vroom_lines(fs::path(muse, 'muse', ext = 'log'))
+inputData <- vroom::vroom(fs::path(muse, 'muse', ext = 'log')) # issue with loading header as line 1 using vroom_lines
 
 # Create splits for batching
 splitData <-
@@ -60,11 +61,13 @@ logFile <- fs::path(wfdb, 'wfdb', ext = 'log')
 if (!fs::file_exists(logFile)) {
 	fs::file_create(logFile)
 }
-logData <- vroom::vroom_lines(logFile)
+logData <- vroom::vroom(logFile) # issue with loading header as line 1 using vroom_lines
 cat("\tCurrently there are", length(logData), "files in the overall WFDB log\n")
 
 # Only need to add files that are new from MUSE
-newData <- setdiff(chunkData, logData)
+if (nrow(logData > 0)) { # adding if statement due to issue with setdiff for empty variable
+        newData <- setdiff(chunkData, logData)
+} else {newData <- chunkData}
 
 cat("\tThere are", length(newData), "new files that can be converted to WFDB format\n")
 
@@ -75,7 +78,7 @@ xmlPaths <-
 	fs::dir_ls(muse, recurse = TRUE, type = "file", glob = "*.xml")
 
 filePaths <-
-	sapply(newData,
+	sapply(newData$MUSE_ID, # NOT CERTAIN on this. newData is two column- fn and fp
 				 function(.x) {
 				 	fs::path_filter(xmlPaths, regexp = .x)
 				 },
@@ -94,13 +97,13 @@ convertedFiles <-
 		fn <- fileNames[i]
 		fp <- filePaths[i]
 
-		ecg <- shiva::read_muse(fp)
+		ecg <- EGM::read_muse(fp)
 		sig <- vec_data(ecg)
-		hea <- attr(ecg, "header")
+		hea <- ecg$header # attr(ecg, "header")
 
 		# Get year
 		year <-
-			hea$start_time |>
+			attributes(hea)$record_line$start_time |>
 			clock::get_year()
 
 		yearFolder <- fs::path(wfdb, year)
@@ -110,7 +113,7 @@ convertedFiles <-
 			fs::dir_create(yearFolder)
 		}
 
-		shiva::write_wfdb(
+		EGM::write_wfdb(
 			data = sig,
 			type = "muse",
 			record = fn,
