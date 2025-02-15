@@ -47,7 +47,7 @@ out <-
 
 						fp <-
 							fs::path_ext_remove(xml) |>
-							fs::path_rel(path = _, start = fs::path(home, main))
+							fs::path_rel(start = fs::path(home, main))
 
 
 						cat("\tWill write MUSE_ID =", fn, "\n")
