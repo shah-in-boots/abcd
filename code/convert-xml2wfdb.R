@@ -57,7 +57,7 @@ gc()
 cat("\nPreparing WFDB data:\n\n")
 
 # Need to know which files have already been processed
-logFile <- fs::path(wfdb, 'wfdb', ext = 'log')
+logFile <- fs::path(wfdb, 'wfdb_raw', ext = 'log') # changing to 'wfdb_raw' from 'wfdb' so it does not clash with full wfdb.log file created via write-wfdb2log.R
 if (!fs::file_exists(logFile)) {
 	fs::file_create(logFile)
 }

@@ -16,9 +16,9 @@ library(readr)
 library(foreach)
 
 # Paths
-home <- fs::path_expand("~")
-main <- fs::path("projects", "cbcd")
-wfdb <- fs::path(home, main, "data", "wfdb")
+home <- fs::path('/mmfs1','projects','cardio_darbar_chi') # correcting path
+main <- fs::path("common") # correcting path
+wfdb <- fs::path(home, main, 'data', 'wfdb')
 
 # Setup parallelization
 nCPU <- parallel::detectCores()
