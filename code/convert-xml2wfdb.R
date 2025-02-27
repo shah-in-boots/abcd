@@ -86,7 +86,7 @@ n <- length(fileNames)
 # Make sure parallel is set up earlier
 # Also place everything into correct "folder" by YEAR
 convertedFiles <-
-	foreach(i = 1:n, .combine = 'c', .errorhandling = "remove") %do% {
+	foreach(i = 1:n, .combine = 'rbind', .errorhandling = "remove") %dopar% {
 
 		# Read in individual files
 		fn <- fileNames[i]
