@@ -119,11 +119,10 @@ convertedFiles <-
 		# Write the file name and path to the WFDB log -----
 
 		# Remove the starting terms in the absolute path:
-		relative_path <- str_replace(fp, "^/mmfs1/projects/cardio_darbar_chi/common/", "")
-		# Remove the file extension and preceeding path:
-		final_path <- str_remove(relative_path, "\\.xml$")
+		# Create the path name:
+		output_path <- fs::path('data','wfdb',basename(yearFolder),fn)
 
-		data_to_write <- data.frame(MUSE_ID = fn, PATH = final_path)
+		data_to_write <- data.frame(MUSE_ID = fn, PATH = output_path)
 
 		vroom::vroom_write(data_to_write, 
 					 file = logFile, 
