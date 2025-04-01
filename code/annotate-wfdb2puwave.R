@@ -18,6 +18,7 @@ library(vroom)
 library(foreach)
 library(parallelly)
 library(doParallel)
+library(tools)
 # options(wfdb_path = '/mmfs1/home/dseaney2/wfdb/bin') # can also add 'source $HOME/.bashrc' to .sh file before R script
 source("/mmfs1/projects/cardio_darbar_chi/common/data/custom_install_code/wfdb-annotation-temp.R") # temp corrected code
 
@@ -29,7 +30,7 @@ taskNumber <- as.integer(args[1]) # Example... 3rd job
 taskCount <- as.integer(args[2]) # Total array jobs will be the number of nodes
 cat("\tBatch array job number", taskNumber, "out of", taskCount, "array jobs total\n")
 
-jobSize <- 10000 # total number of files (across all tasks). If you would like to read all files, simply comment this line
+jobSize <- 1000 # total number of files (across all tasks). If you would like to read all files, simply comment this line
 
 # Setup parallelization
 nCPU <- parallelly::availableCores()
@@ -64,11 +65,14 @@ cat("\tCurrently there are", nrow(logData), "files in the ECGPUWAVE log\n")
 
 # Only need to annotate those that have not yet been done
 newData <- inputData |> dplyr::filter(!FILE_NAME %in% logData$FILE_NAME)
-rm(inputData)
+rm(inputData, logData)
 
 # Limit file count as needed
 if (exists("jobSize")) {
-	newData <- newData[1:jobSize,]
+        if (jobSize > nrow(newData)) {
+                    jobSize <- nrow(newData)
+        }
+        newData <- newData[1:jobSize,]
 }
 
 # Create folders
@@ -152,8 +156,8 @@ out <-
 
 
                         # Move file to correct folder
-                        # old_path <- chunkData$PATH[i]
-                        # new_path <- gsub("wfdb", "ecgpuwave", old_path)
+                        old_path <- chunkData$PATH[i]
+                        new_path <- gsub("wfdb", "ecgpuwave", old_path)
                         # file.rename(from=fs::path(home,old_path,ext='ecgpuwave'),
                         #             to=fs::path(home,new_path,ext='ecgpuwave'))
 
@@ -162,7 +166,9 @@ out <-
 
                         # Return new row
 
-                        if (file.exists(fs::path(home,new_path,ext='ecgpuwave'))) {
+			scratch_file_path <- fs::path(fs::path(scratch,year),fn,ext='ecgpuwave')
+
+                        if (file.exists(scratch_file_path)) {
                         data.frame(
                                 MUSE_ID = chunkData$MUSE_ID[i],
                                 PATH = new_path,
@@ -173,33 +179,47 @@ out <-
                 }
         }
 
+cat("Files written to scratch. Moving files to project space...","\n")
+		       
 # Copy files from scratch space to project space ---
 # Get list of subfolders in scratch
 subfolders <- fs::dir_ls(scratch, type = "directory")
 
 # Loop through each subfolder
 for (subfolder in subfolders) {
-  folder_name <- fs::path_file(subfolder)
-  
-  # Get list of .ecgpuwave files in the current subfolder
-  ecgpuwave_files <- fs::dir_ls(subfolder, glob = "*.ecgpuwave")
-  
-  # Define corresponding 'ecgpuwave' folder path
-  ecgpuwave_subfolder <- fs::path(ecgpuwave, folder_name)
-  
-  # Create the 'ecgpuwave' subfolder if it doesn't exist
-  if (!fs::dir_exists(ecgpuwave_subfolder)) {
-    fs::dir_create(ecgpuwave_subfolder)
-    cat("Created folder:", ecgpuwave_subfolder, "\n")
-  }
-  
-  # Move each .ecgpuwave file to the corresponding 'ecgpuwave' subfolder
-  for (file in ecgpuwave_files) {
-    target_path <- fs::path(ecgpuwave_subfolder, fs::path_file(file))
-    fs::file_copy(file, target_path, overwrite = TRUE)
-    # cat("Moved file:", file, "to", target_path, "\n")
-  }
-}
+	  folder_name <- fs::path_file(subfolder)
+	  
+	  # Get list of .ecgpuwave files in the current subfolder
+	  ecgpuwave_files <- fs::dir_ls(subfolder, glob = "*.ecgpuwave")
+	  
+	  # Define corresponding 'ecgpuwave' folder path
+	  ecgpuwave_subfolder <- fs::path(ecgpuwave, folder_name)
+	  
+	  # Create the 'ecgpuwave' subfolder if it doesn't exist
+	  if (!fs::dir_exists(ecgpuwave_subfolder)) {
+	    fs::dir_create(ecgpuwave_subfolder)
+	    cat("Created folder:", ecgpuwave_subfolder, "\n")
+	  }
+	  
+	  # Move each .ecgpuwave file to the corresponding 'ecgpuwave' subfolder
+	  for (file in ecgpuwave_files) {
+	    target_path <- fs::path(ecgpuwave_subfolder, fs::path_file(file))
+	    fs::file_copy(file, target_path, overwrite = TRUE)
+	    # cat("Moved file:", file, "to", target_path, "\n")
+	  }
+
+	scratch_files <- list.files(path(subfolder),pattern='ecgpuwave')
+	folder_files <- list.files(ecgpuwave_subfolder,pattern='ecgpuwave')
+		       
+	if (sum(scratch_files %in% folder_files) == length(scratch_files)) {
+		cat("All files are moved to project space in folder","subfolder","\n")
+	} else {
+		cat("WARNING: not all files were transferred. Removing them from out log","\n")
+		missing_files <- scratch_files %in% folder_files
+		out <- out |> filter(!FILE_NAME %in% file_path_sans_ext(missing_files))
+		}
+	    }
+
 
 
 out |>
